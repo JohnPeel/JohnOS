@@ -16,50 +16,13 @@
 */
 
 #include <main.h>
-
-#define asm __asm__ __volatile__
-
-inline void outb(unsigned short port, unsigned char val)
-{
-    asm("outb %0, %1" : : "a"(val), "Nd"(port));
-}
-
-inline void outw(unsigned short port, unsigned int val)
-{
-    asm("outw %0, %1" : : "a"(val), "Nd"(port));
-}
-
-inline void outl(unsigned short port, unsigned long val)
-{
-    asm("outl %0, %1" : : "a"(val), "Nd"(port));
-}
-
-inline unsigned char inb(unsigned short port)
-{
-    unsigned char ret;
-    asm("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
-
-inline unsigned int inw(unsigned short port)
-{
-    unsigned int ret;
-    asm("inw %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
-
-inline unsigned long inl(unsigned short port)
-{
-    unsigned long ret;
-    asm("inl %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
+#include <screen.h>
 
 void main(void)
 {
-    unsigned char *videoram = (unsigned char *) 0xb8000;
-    videoram[0] = 65;
-    videoram[1] = 0x07;
+    init_video();
+    
+    puts("Hello World\n     Dgby714");
     
     for (;;);
 }

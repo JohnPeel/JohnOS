@@ -15,9 +15,16 @@
     along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MAIN_H_
-#define __MAIN_H_
+#ifndef __SCREEN_H_
+#define __SCREEN_H_
 
-extern void main(void);
+extern void update_csr(void);
+extern void clear_line(const int line);
+extern void cls(void);
+extern void scroll(void);
+extern int putc(const char c);
+extern int puts(const char *s);
+extern void settextmode(const char fg, const char bg);
+extern void init_video(void);
 
 #endif

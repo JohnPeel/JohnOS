@@ -15,9 +15,15 @@
     along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MAIN_H_
-#define __MAIN_H_
+#ifndef __STRING_H_
+#define __STRING_H_
 
-extern void main(void);
+typedef int size_t;
+
+extern void *memcpy(void *dest, void *src, size_t num);
+extern void *memcpyw(void *dest, void *src, size_t num);
+extern void *memset(void *ptr, int value, size_t num);
+extern void *memsetw(void *ptr, int value, size_t num);
+extern size_t strlen(const char *str);
 
 #endif
