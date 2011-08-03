@@ -13,7 +13,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: all clean dist todolist test
+.PHONY: all clean dist todolist
 
 NASM=nasm
 CC=i586-elf-gcc
