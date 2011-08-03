@@ -53,7 +53,7 @@ build/%.o: src/%.c build/.ph
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	-@$(RM) -r $(wildcard $(OBJFILES) build/start.o $(DEPFILES) build/ kernel.bin kernel.tar.gz )
+	-@$(RM) -r $(wildcard $(OBJFILES) build/start.o $(DEPFILES) build/ kernel.bin kernel.tar.gz kernel.img)
 	
 dist:
 	@tar czf kernel.tar.gz $(ALLFILES)
