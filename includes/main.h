@@ -18,6 +18,13 @@
 #ifndef __MAIN_H_
 #define __MAIN_H_
 
+extern inline void outb(unsigned short port, unsigned char val);
+extern inline void outw(unsigned short port, unsigned int val);
+extern inline void outl(unsigned short port, unsigned long val);
+extern inline unsigned char inb(unsigned short port);
+extern inline unsigned int inw(unsigned short port);
+extern inline unsigned long inl(unsigned short port);
+
 extern void main(void);
 
 #endif
