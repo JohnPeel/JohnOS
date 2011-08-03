@@ -20,7 +20,7 @@ CC=i586-elf-gcc
 LD=i586-elf-ld
 
 AUXFILES := Makefile README COPYING
-PROJDIRS := src includes build
+PROJDIRS := src includes
 SRCFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
 OBJFILES := $(patsubst src/%.c,build/%.o,$(SRCFILES))
@@ -40,17 +40,22 @@ all: kernel.bin
 kernel.bin: build/start.o $(OBJFILES)
 	@$(LD) -T src/link.ld -o kernel.bin build/start.o $(OBJFILES)
 	
-build/start.o:
+%/.ph: 
+	@mkdir -p $(@D)
+	@touch $@
+	
+build/start.o: build/.ph
 	@$(NASM) -f elf -o build/start.o src/start.asm
 	
-build/%.o: src/%.c Makefile
+build/%.o: src/%.c build/.ph
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	-@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) kernel.bin kernel.tar.gz build/start.o)
+	-@$(RM) -r $(wildcard $(OBJFILES) build/start.o $(DEPFILES) build/ kernel.bin kernel.tar.gz )
 	
 dist:
 	@tar czf kernel.tar.gz $(ALLFILES)
 	
 todolist:
-	-@for file in $(ALLFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
+	-@for file in $(SRCFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
+	-@for file in $(HDRFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
