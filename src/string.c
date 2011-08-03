@@ -48,5 +48,5 @@ void *memsetw(void *ptr, int value, size_t num)
 size_t strlen(const char *str) {
   size_t len;
   for (len = 0; str[len] != '\0'; len++);
-  return --len;
+  return len;
 }

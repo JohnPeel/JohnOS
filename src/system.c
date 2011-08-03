@@ -17,36 +17,36 @@
 
 #include <system.h>
 
-inline void outb(unsigned short port, unsigned char val)
+void outb(unsigned short port, unsigned char val)
 {
     asm("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
-inline void outw(unsigned short port, unsigned int val)
+void outw(unsigned short port, unsigned int val)
 {
     asm("outw %0, %1" : : "a"(val), "Nd"(port));
 }
 
-inline void outl(unsigned short port, unsigned long val)
+void outl(unsigned short port, unsigned long val)
 {
     asm("outl %0, %1" : : "a"(val), "Nd"(port));
 }
 
-inline unsigned char inb(unsigned short port)
+unsigned char inb(unsigned short port)
 {
     unsigned char ret;
     asm("inb %1, %0" : "=a"(ret) : "Nd"(port));
     return ret;
 }
 
-inline unsigned int inw(unsigned short port)
+unsigned int inw(unsigned short port)
 {
     unsigned int ret;
     asm("inw %1, %0" : "=a"(ret) : "Nd"(port));
     return ret;
 }
 
-inline unsigned long inl(unsigned short port)
+unsigned long inl(unsigned short port)
 {
     unsigned long ret;
     asm("inl %1, %0" : "=a"(ret) : "Nd"(port));

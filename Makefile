@@ -32,8 +32,8 @@ WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
             -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wuninitialized -Wconversion -Wstrict-prototypes
-CFLAGS := -g -std=c99 -nostdinc -fno-builtin -Iincludes -ffreestanding -MMD -MP -c $(WARNINGS)
-# -O -fstrength-reduce -fomit-frame-pointer -finline-functions
+CFLAGS := -g -std=c99 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
+          -I./includes -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
 
 all: clean build
 
