@@ -18,13 +18,7 @@
 #ifndef __ISRS_H_
 #define __ISRS_H_
 
-struct regs
-{
-    unsigned int gs, fs, es, ds;
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
-    unsigned int int_no, err_code;
-    unsigned int eip, cs, eflags, useresp, ss;
-};
+#include <idt.h>
 
 extern void isr0(void);
 extern void isr1(void);
@@ -59,7 +53,7 @@ extern void isr29(void);
 extern void isr30(void);
 extern void isr31(void);
 
-extern void fault_handler(struct regs *r);
+extern void fault_handler(regs *r);
 extern void isrs_install(void);
 
 #endif

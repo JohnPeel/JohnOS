@@ -15,26 +15,32 @@
     along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <main.h>
-#include <system.h>
-#include <gdt.h>
-#include <idt.h>
-#include <isrs.h>
-#include <irq.h>
-#include <screen.h>
+#ifndef __IRQ_H
+#define __IRQ_H_
 
-void main(void)
-{
-    gdt_install();
-    idt_install();
-    isrs_install();
-    irq_install();
-    
-    asm("sti");
-    
-    init_video();
-    
-    puts("Hello World!\n");
-    
-    for (;;);
-}
+#include <idt.h>
+
+extern void irq0(void);
+extern void irq1(void);
+extern void irq2(void);
+extern void irq3(void);
+extern void irq4(void);
+extern void irq5(void);
+extern void irq6(void);
+extern void irq7(void);
+extern void irq8(void);
+extern void irq9(void);
+extern void irq10(void);
+extern void irq11(void);
+extern void irq12(void);
+extern void irq13(void);
+extern void irq14(void);
+extern void irq15(void);
+
+extern void irq_install_handler(int irq, void (*handler)(regs *r));
+extern void irq_uninstall_handler(int irq);
+extern void irq_remap(void);
+extern void irq_handler(regs *r);
+extern void irq_install(void);
+
+#endif
