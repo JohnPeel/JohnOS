@@ -15,21 +15,26 @@
     along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <main.h>
-#include <gdt.h>
-#include <idt.h>
-#include <isrs.h>
-#include <screen.h>
+#ifndef __IDT_H_
+#define __IDT_H_
 
-void main(void)
+struct idt_entry
 {
-    gdt_install();
-    idt_install();
-    isrs_install();
-    
-    init_video();
-    
-    puts("Hello World!\n");
-    
-    for (;;);
-}
+    unsigned short base_lo;
+    unsigned short sel;
+    unsigned char always0;
+    unsigned char flags;
+    unsigned short base_hi;
+} __attribute__((packed));
+
+struct idt_ptr
+{
+    unsigned short limit;
+    unsigned int base;
+} __attribute__((packed));
+
+extern void idt_load(void);
+extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
+extern void idt_install(void);
+
+#endif
