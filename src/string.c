@@ -20,28 +20,28 @@
 void *memcpy(void *dest, void *src, size_t num)
 {
     unsigned char *d = dest, *s = src;
-    for (; num >= 0; num--) d[num] = s[num];
-    return d;
+    for (; num >= 0; num--) *d++ = *s++;
+    return dest;
 }
 
 void *memcpyw(void *dest, void *src, size_t num)
 {
     unsigned short *d = dest, *s = src;
-    for (; num >= 0; num--) d[num] = s[num];
-    return d;
+    for (; num >= 0; num--) *d++ = *s++;
+    return dest;
 }
 
 void *memset(void *ptr, int value, size_t num)
 {
     unsigned char *dest = ptr;
-    for (; num >= 0; num--) dest[num] = (unsigned char)value;
+    for (; num >= 0; num--) *dest++ = (unsigned char)value;
     return dest;
 }
 
 void *memsetw(void *ptr, int value, size_t num)
 {
     unsigned short *dest = ptr;
-    for (; num >= 0; num--) dest[num] = (unsigned short)value;
+    for (; num >= 0; num--) *dest++ = (unsigned short)value;
     return dest;
 }
 

@@ -15,31 +15,14 @@
     along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <main.h>
-#include <system.h>
-#include <gdt.h>
-#include <idt.h>
-#include <isrs.h>
-#include <irq.h>
-#include <screen.h>
-#include <timer.h>
+#ifndef __TIMER_H
+#define __TIMER_H_
 
-void main(void)
-{
-    gdt_install();
-    idt_install();
-    isrs_install();
-    irq_install();
-    init_video();
-    timer_install();
-    
-    asm("sti");
-    
-    puts("Hello World!\n Wait for it...\n\n");
-    
-    unsigned long ticks = timer_ticks + (18 * 2);
-    while (ticks > timer_ticks);
-    puts("Boomya!");
-    
-    for (;;);
-}
+#include <idt.h>
+
+unsigned long timer_ticks;
+
+extern void timer_handler(regs *r);
+extern void timer_install(void);
+
+#endif

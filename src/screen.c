@@ -56,7 +56,7 @@ void scroll(void)
     if(csr_y >= 25)
     {
         temp = csr_y - 25 + 1;
-        memcpyw(vidmem, vidmem + (temp * 80), ((25 - temp) * 80 * 2));
+        memcpy(vidmem, vidmem + (temp * 80), ((25 - temp) * 80) * 2);
         clear_line(25 - temp);
         csr_y = 25 - 1;
     }
@@ -64,6 +64,7 @@ void scroll(void)
 
 int putc(const char c)
 {
+    int r = 1;
     if ((c == 0x08) && (csr_x != 0))
     {
         csr_x--;
@@ -89,7 +90,7 @@ int putc(const char c)
     }
     else
     {
-        return 0;
+        r = 0;
     }
     
     if(csr_x >= 80)
@@ -100,7 +101,7 @@ int putc(const char c)
     
     scroll();
     update_csr();
-    return 1;
+    return r;
 }
 
 int puts(const char *s)
