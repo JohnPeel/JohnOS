@@ -31,22 +31,61 @@ void *memcpyw(void *dest, void *src, size_t num)
     return dest;
 }
 
-void *memset(void *ptr, int value, size_t num)
+void *memset(void *ptr, const int value, size_t num)
 {
     unsigned char *dest = ptr;
     for (; num >= 0; num--) *dest++ = (unsigned char)value;
     return dest;
 }
 
-void *memsetw(void *ptr, int value, size_t num)
+void *memsetw(void *ptr, const int value, size_t num)
 {
     unsigned short *dest = ptr;
     for (; num >= 0; num--) *dest++ = (unsigned short)value;
     return dest;
 }
 
-size_t strlen(const char *str) {
+size_t strlen(const char *str)
+{
   size_t len;
   for (len = 0; str[len] != '\0'; len++);
   return len;
 }
+
+long pow(const long base, const long exp)
+{
+	long i, l = 1;
+	for (i = exp; i > 0; i--)
+		l *= base;
+	return l;
+}
+
+size_t llen(const long l)
+{
+	size_t j = 0;
+	while (l >= pow(10, (long)j))
+		j++;
+	return j >= 1 ? j : 1; //Must be >= 1
+}
+
+size_t ilen(const int i)
+{
+	return llen((long)i);
+}
+
+char *ltoa(const long l, char *dest, const size_t len)
+{		
+	long p, i = l;
+	for (p = 1; p <= len; p++) {
+		dest[len - p] = (char)((i % 10) + 48);
+		i /= 10;
+	}
+	return dest;
+}
+
+char *itoa(const int i, char *d, const size_t len)
+{		
+	return ltoa((long)i, d, len);
+}
+
+
