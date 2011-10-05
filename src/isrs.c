@@ -99,4 +99,6 @@ void isrs_install(void)
     idt_set_gate(29, (unsigned long)isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned long)isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned long)isr31, 0x08, 0x8E);
+	
+	puts("ISRS Installed!\n");
 }

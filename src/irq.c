@@ -19,11 +19,10 @@
 #include <system.h>
 #include <idt.h>
 
-void *irq_routines[16] =
-{
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
+#include <screen.h>
+#include <string.h>
+
+void *irq_routines[16] = {0, };
 
 void irq_install_handler(int irq, void (*handler)(regs *r))
 {
@@ -51,7 +50,31 @@ void irq_remap(void)
 
 void irq_handler(regs *r)
 {
-    void (*handler)(regs *r);
+    if (r->int_no > 33) { //Don't show irq0 (timer) or irq1 (keyboard)
+		puts("irq_handler(");
+		puts("\n  gs="); puti(r->gs);
+		puts(", fs="); puti(r->fs);
+		puts(", es="); puti(r->es);
+		puts(", ds="); puti(r->ds);
+		puts(",\n  edi="); puti(r->edi);
+		puts(", esi="); puti(r->esi);
+		puts(", ebp="); puti(r->ebp);
+		puts(", esp="); puti(r->esp);
+		puts(",\n  ebx="); puti(r->ebx);
+		puts(", edx="); puti(r->edx);
+		puts(", ecx="); puti(r->ecx);
+		puts(", eax="); puti(r->eax);
+		puts(",\n  int_no="); puti(r->int_no);
+		puts(", err_code="); puti(r->err_code);
+		puts(",\n  eip="); puti(r->eip);
+		puts(", cs="); puti(r->cs);
+		puts(", eflags="); puti(r->eflags);
+		puts(", useresp="); puti(r->useresp);
+		puts(", ss="); puti(r->ss);
+		puts("\n);\n");
+	}
+	
+	void (*handler)(regs *r);
 
     handler = irq_routines[r->int_no - 32];
     if (handler)
@@ -83,5 +106,7 @@ void irq_install(void)
     idt_set_gate(45, (unsigned long)irq13, 0x08, 0x8E);
     idt_set_gate(46, (unsigned long)irq14, 0x08, 0x8E);
     idt_set_gate(47, (unsigned long)irq15, 0x08, 0x8E);
+	
+	puts("IRQ Installed!\n");
 }
 
