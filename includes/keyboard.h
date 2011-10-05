@@ -42,6 +42,7 @@ extern unsigned char keyboard_leds;
 extern void keyboard_updateleds(void);
 extern void keyboard_toggleled(unsigned char led);
 extern void keyboard_togglemod(unsigned char mod);
+extern int keyboard_uppercase(void);
 extern void keyboard_handler(regs *r);
 extern void keyboard_install(void);
 

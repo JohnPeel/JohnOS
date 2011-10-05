@@ -50,6 +50,21 @@ void keyboard_togglemod(unsigned char mod) {
 	}
 }
 
+int keyboard_uppercase(void) {
+	char i = 0;
+	
+	if ((keyboard_mods & MOD_CAPSL) == MOD_CAPSL)
+		i++;
+		
+	if ((keyboard_mods & MOD_LSHIFT) == MOD_LSHIFT)
+		i++;
+		
+	if ((keyboard_mods & MOD_RSHIFT) == MOD_RSHIFT)
+		i++;
+		
+	return i > 0 ? 0 : 1;
+}
+
 void keyboard_handler(regs *r)
 {
 	unsigned char scancode = inb(0x60);
@@ -80,12 +95,16 @@ void keyboard_handler(regs *r)
 		
 		case 0xaa://Left Shift
 			keyboard_mods &= MOD_ALL - MOD_LSHIFT;
+			break;
 		case 42:
+			keyboard_mods |= MOD_LSHIFT;
 			break;
 		
 		case 0xb6://Right Shift
 			keyboard_mods &= MOD_ALL - MOD_RSHIFT;
+			break;
 		case 54:
+			keyboard_mods |= MOD_RSHIFT;
 			break;
 		
 		case 0x9d: //ALT
@@ -102,12 +121,22 @@ void keyboard_handler(regs *r)
 			break;
 		
 		case 14: //Backspace
+			putc(0x08);
 		case 142:
+			break;
+			
 		case 15: //Tab
+			putc('\t');
 		case 143:
+			break;
+			
 		case 28: //Enter
+			putc('\n');
 		case 156:
+			break;
+			
 		case 57: //Space
+			putc(' ');
 		case 185:
 			break;
 		
@@ -122,27 +151,55 @@ void keyboard_handler(regs *r)
 			break;
 		
 		case 0x02: //1
+			putc('1');
 		case 130:
-		case 0x03: //2
-		case 131:
-		case 0x04: //3
-		case 132:
-		case 0x05: //4
-		case 133:
-		case 0x06: //5
-		case 134:
-		case 0x07: //6
-		case 135:
-		case 0x08: //7
-		case 136:
-		case 0x09: //8
-		case 137:
-		case 0x0a: //9
-		case 138:
-		case 0x0b: //0
-		case 139:
 			break;
 		
+		case 0x03: //2
+			putc('2');
+		case 131:
+			break;
+		
+		case 0x04: //3
+			putc('3');
+		case 132:
+			break;
+		
+		case 0x05: //4
+			putc('4');
+		case 133:
+			break;
+		
+		case 0x06: //5
+			putc('5');
+		case 134:
+			break;
+		
+		case 0x07: //6
+			putc('6');
+		case 135:
+			break;
+		
+		case 0x08: //7
+			putc('7');
+		case 136:
+			break;
+		
+		case 0x09: //8
+			putc('8');
+		case 137:
+			break;
+		
+		case 0x0a: //9
+			putc('9');
+		case 138:
+			break;
+			
+		case 0x0b: //0
+			putc('0');
+		case 139:
+			break;
+			
 		case 12: //-
 		case 140:
 		case 13: //=
@@ -170,56 +227,185 @@ void keyboard_handler(regs *r)
 			break;
 		
 		case 30: //a
+			if (keyboard_uppercase() == 0)
+				putc('A');
+			else
+				putc('a');
 		case 158:
+			break;
 		case 48: //b
+			if (keyboard_uppercase() == 0)
+				putc('B');
+			else
+				putc('b');
 		case 176:
+			break;
 		case 46: //c
+			if (keyboard_uppercase() == 0)
+				putc('C');
+			else
+				putc('c');
 		case 174:
+			break;
 		case 32: //d
+			if (keyboard_uppercase() == 0)
+				putc('D');
+			else
+				putc('d');
 		case 160:
+			break;
 		case 18: //e
+			if (keyboard_uppercase() == 0)
+				putc('E');
+			else
+				putc('e');
 		case 146:
+			break;
 		case 33: //f
+			if (keyboard_uppercase() == 0)
+				putc('F');
+			else
+				putc('f');
 		case 161:
+			break;
 		case 34: //g
+			if (keyboard_uppercase() == 0)
+				putc('G');
+			else
+				putc('g');
 		case 162:
+			break;
 		case 35: //h
+			if (keyboard_uppercase() == 0)
+				putc('H');
+			else
+				putc('h');
 		case 163:
+			break;
 		case 23: //i
+			if (keyboard_uppercase() == 0)
+				putc('I');
+			else
+				putc('i');
 		case 151:
+			break;
 		case 36: //j
+			if (keyboard_uppercase() == 0)
+				putc('J');
+			else
+				putc('j');
 		case 164:
+			break;
 		case 37: //k
+			if (keyboard_uppercase() == 0)
+				putc('K');
+			else
+				putc('k');
 		case 165:
+			break;
 		case 38: //l
+			if (keyboard_uppercase() == 0)
+				putc('L');
+			else
+				putc('l');
 		case 166:
+			break;
 		case 50: //m
+			if (keyboard_uppercase() == 0)
+				putc('M');
+			else
+				putc('m');
 		case 178:
+			break;
 		case 49: //n
+			if (keyboard_uppercase() == 0)
+				putc('N');
+			else
+				putc('n');
 		case 177:
+			break;
 		case 24: //o
+			if (keyboard_uppercase() == 0)
+				putc('O');
+			else
+				putc('o');
 		case 152:
+			break;
 		case 25: //p
+			if (keyboard_uppercase() == 0)
+				putc('P');
+			else
+				putc('p');
 		case 153:
+			break;
 		case 16: //q
+			if (keyboard_uppercase() == 0)
+				putc('Q');
+			else
+				putc('q');
 		case 144:
+			break;
 		case 19: //r
+			if (keyboard_uppercase() == 0)
+				putc('R');
+			else
+				putc('r');
 		case 147:
+			break;
 		case 31: //s
+			if (keyboard_uppercase() == 0)
+				putc('S');
+			else
+				putc('s');
 		case 159:
+			break;
 		case 20: //t
+			if (keyboard_uppercase() == 0)
+				putc('T');
+			else
+				putc('t');
 		case 148:
+			break;
 		case 22: //u
+			if (keyboard_uppercase() == 0)
+				putc('U');
+			else
+				putc('u');
 		case 150:
+			break;
 		case 47: //v
+			if (keyboard_uppercase() == 0)
+				putc('V');
+			else
+				putc('v');
 		case 175:
+			break;
 		case 17: //w
+			if (keyboard_uppercase() == 0)
+				putc('W');
+			else
+				putc('w');
 		case 145:
+			break;
 		case 45: //x
+			if (keyboard_uppercase() == 0)
+				putc('X');
+			else
+				putc('x');
 		case 173:
+			break;
 		case 21: //y
+			if (keyboard_uppercase() == 0)
+				putc('Y');
+			else
+				putc('y');
 		case 149:
+			break;
 		case 44: //z
+			if (keyboard_uppercase() == 0)
+				putc('Z');
+			else
+				putc('z');
 		case 172:
 			break;
 		
@@ -258,13 +444,8 @@ void keyboard_handler(regs *r)
 			break;
 		
 		default:
-			puts("Unknown ");
 			break;
 	}
-	
-	puts("Scancode: ");
-	puti(scancode);
-	putc('\n');
 	
 	if (((keyboard_mods & MOD_E0) == MOD_E0) && (scancode != 0xe0))
 		keyboard_togglemod(MOD_E0);
