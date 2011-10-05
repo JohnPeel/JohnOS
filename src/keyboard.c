@@ -1,18 +1,18 @@
 /*
-    This file is part of JohnOS.
+	This file is part of JohnOS.
 
-    JohnOS is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	JohnOS is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    JohnOS is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	JohnOS is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <keyboard.h>
@@ -52,7 +52,7 @@ void keyboard_togglemod(unsigned char mod) {
 
 void keyboard_handler(regs *r)
 {
-    unsigned char scancode = inb(0x60);
+	unsigned char scancode = inb(0x60);
 	
 	switch (scancode) {
 		case 0x01: //Escape
@@ -272,7 +272,7 @@ void keyboard_handler(regs *r)
 
 void keyboard_install(void)
 {
-    irq_install_handler(1, keyboard_handler);
+	irq_install_handler(1, keyboard_handler);
 	
 	puts("Keyboard Handler Installed! (Unfinished!)\n");
 }
