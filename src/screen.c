@@ -30,12 +30,12 @@ int current_line(void)
 
 void update_csr(void)
 {
-	unsigned char c = (unsigned char)(csr_y * 80 + csr_x);
+	unsigned int c = (unsigned int)((csr_y * 80) + csr_x);
 	
 	outb(0x3D4, 14);
-	outb(0x3D5, (unsigned char)(c >> 8));
+	outb(0x3D5, (unsigned char)((c >> 8) & 0xFF));
 	outb(0x3D4, 15);
-	outb(0x3D5, c);
+	outb(0x3D5, (unsigned char)(c & 0xFF));
 }
 
 void clear_line(const int line)
