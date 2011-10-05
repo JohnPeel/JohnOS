@@ -17,29 +17,34 @@
 
 #include <main.h>
 #include <system.h>
+#include <screen.h>
 #include <gdt.h>
 #include <idt.h>
 #include <isrs.h>
 #include <irq.h>
-#include <screen.h>
 #include <timer.h>
+#include <string.h>
+#include <keyboard.h>
+#include <mouse.h>
 
 void main(void)
 {
-    gdt_install();
+    init_video();
+	
+	gdt_install();
     idt_install();
     isrs_install();
     irq_install();
-    init_video();
     timer_install();
-    
+	keyboard_install();
+	mouse_install();
+	
+	keyboard_updateleds();
+	
+    putc('\n');
     asm("sti");
-    
-    puts("Hello World!\n Wait for it...\n\n");
-    
-    unsigned long ticks = timer_ticks + (18 * 2);
-    while (ticks > timer_ticks);
-    puts("Boomya!");
-    
+	
+	//TODO: umm more os code?
+	
     for (;;);
 }
