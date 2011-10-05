@@ -30,10 +30,10 @@ int current_line(void)
 
 void update_csr(void)
 {
-	unsigned char c = csr_y * 80 + csr_x;
+	unsigned char c = (unsigned char)(csr_y * 80 + csr_x);
 	
 	outb(0x3D4, 14);
-	outb(0x3D5, c >> 8);
+	outb(0x3D5, (unsigned char)(c >> 8));
 	outb(0x3D4, 15);
 	outb(0x3D5, c);
 }
@@ -60,7 +60,7 @@ void scroll(void)
 	
 	if(csr_y >= 25)
 	{
-	    temp = csr_y - 25 + 1;
+	    temp = (unsigned short)(csr_y - 25 + 1);
 	    memcpy(vidmem, vidmem + (temp * 80), ((25 - temp) * 80) * 2);
 	    clear_line(25 - temp);
 	    csr_y = 25 - 1;
@@ -91,7 +91,7 @@ int putc(const char c)
 	else if(c >= ' ')
 	{
 	    unsigned short *where = vidmem + (csr_y * 80 + csr_x);
-	    *where = c | (attrib << 8);
+	    *where = (unsigned short)(c | (attrib << 8));
 	    csr_x++;
 	}
 	else

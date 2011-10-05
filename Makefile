@@ -28,11 +28,11 @@ DEPFILES := $(patsubst src/%.c,build/%.d,$(SRCFILES))
 SRCFILES := src/start.asm $(SRCFILES)
 ALLFILES := $(SRCFILES) $(HDRFILES) $(AUXFILES)
 
-WARNINGS := -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
+WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
             -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wuninitialized -Wconversion -Wstrict-prototypes
-CFLAGS := -g -std=c99 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
+CFLAGS := -g -std=c99 -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
           -I./includes -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
 
 all: clean build
@@ -47,7 +47,7 @@ kernel.bin: build/start.o $(OBJFILES)
 	@touch $@
 	
 build/start.o: build/ph
-	@$(NASM) -f elf -o build/start.o src/start.asm
+	@$(NASM) -o build/start.o -f elf -Ox -Xgnu src/start.asm
 	
 build/%.o: src/%.c build/ph
 	@$(CC) $(CFLAGS) $< -o $@

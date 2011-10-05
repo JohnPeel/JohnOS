@@ -34,7 +34,7 @@ void keyboard_updateleds(void) {
 
 void keyboard_toggleled(unsigned char led) {
 	if ((keyboard_leds & led) == led) {
-		keyboard_leds &= LED_ALL - led;
+		keyboard_leds &= (unsigned char)(LED_ALL - led);
 	} else {
 		keyboard_leds |= led;
 	}
@@ -44,7 +44,7 @@ void keyboard_toggleled(unsigned char led) {
 
 void keyboard_togglemod(unsigned char mod) {
 	if ((keyboard_mods & mod) == mod) {
-		keyboard_mods &= MOD_ALL - mod;
+		keyboard_mods &= (unsigned char)(MOD_ALL - mod);
 	} else {
 		keyboard_mods |= mod;
 	}
@@ -157,7 +157,7 @@ void keyboard_handler(regs *r)
 		case 168:
 		case 41: //`
 		case 169:
-		case 43: //\
+		case 43: //Backslash
 		case 0xab:
 		case 51: //,
 		case 179:
