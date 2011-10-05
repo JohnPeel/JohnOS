@@ -42,14 +42,14 @@ build: kernel.bin
 kernel.bin: build/start.o $(OBJFILES)
 	@$(LD) -T src/link.ld -o kernel.bin build/start.o $(OBJFILES)
 	
-%/.ph: 
+%/ph: 
 	@mkdir -p $(@D)
 	@touch $@
 	
-build/start.o: build/.ph
+build/start.o: build/ph
 	@$(NASM) -f elf -o build/start.o src/start.asm
 	
-build/%.o: src/%.c build/.ph
+build/%.o: src/%.c build/ph
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
