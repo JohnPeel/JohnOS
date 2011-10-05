@@ -47,7 +47,7 @@ void cls(void)
 {
 	int i;
 	for (i = 0; i < 25; i++)
-	    clear_line(i);
+		clear_line(i);
 	
 	csr_x = 0;
 	csr_y = 0;
@@ -60,10 +60,10 @@ void scroll(void)
 	
 	if(csr_y >= 25)
 	{
-	    temp = (unsigned short)(csr_y - 25 + 1);
-	    memcpy(vidmem, vidmem + (temp * 80), ((25 - temp) * 80) * 2);
-	    clear_line(25 - temp);
-	    csr_y = 25 - 1;
+		temp = (unsigned short)(csr_y - 25 + 1);
+		memcpy(vidmem, vidmem + (temp * 80), ((25 - temp) * 80) * 2);
+		clear_line(25 - temp);
+		csr_y = 25 - 1;
 	}
 	update_csr();
 }
@@ -73,36 +73,36 @@ int putc(const char c)
 	int r = 1;
 	if ((c == 0x08) && (csr_x != 0))
 	{
-	    csr_x--;
+		csr_x--;
 	}
 	else if(c == 0x09)
 	{
-	    csr_x = (csr_x + 8) & ~(8 - 1);
+		csr_x = (csr_x + 8) & ~(8 - 1);
 	}
 	else if(c == '\r')
 	{
-	    csr_x = 0;
+		csr_x = 0;
 	}
 	else if(c == '\n')
 	{
-	    csr_x = 0;
-	    csr_y++;
+		csr_x = 0;
+		csr_y++;
 	}
 	else if(c >= ' ')
 	{
-	    unsigned short *where = vidmem + (csr_y * 80 + csr_x);
-	    *where = (unsigned short)(c | (attrib << 8));
-	    csr_x++;
+		unsigned short *where = vidmem + (csr_y * 80 + csr_x);
+		*where = (unsigned short)(c | (attrib << 8));
+		csr_x++;
 	}
 	else
 	{
-	    r = 0;
+		r = 0;
 	}
 	
 	if(csr_x >= 80)
 	{
-	    csr_x = 0;
-	    csr_y++;
+		csr_x = 0;
+		csr_y++;
 	}
 	
 	scroll();
@@ -114,7 +114,7 @@ int puts(const char *s)
 {
 	int i;
 	for (i = 0; i < strlen(s); i++) 
-	    putc(s[i]);
+		putc(s[i]);
 	return i;
 }
 
