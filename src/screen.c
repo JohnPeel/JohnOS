@@ -23,6 +23,11 @@ unsigned short *vidmem;
 int attrib = 0x0F;
 int csr_x = 0, csr_y = 0;
 
+int current_line(void)
+{
+	return csr_y;
+}
+
 void update_csr(void)
 {
     unsigned char c = csr_y * 80 + csr_x;
@@ -60,6 +65,7 @@ void scroll(void)
         clear_line(25 - temp);
         csr_y = 25 - 1;
     }
+	update_csr();
 }
 
 int putc(const char c)
@@ -112,6 +118,24 @@ int puts(const char *s)
     return i;
 }
 
+int puti(const int i)
+{
+	int len = ilen(i);
+	char str[len + 1];
+	memset((void *)str, 0, len + 1);
+	itoa(i, str, len);
+	return puts(str);
+}
+
+int putl(const long l)
+{
+	int len = llen(l);
+	char str[len + 1];
+	memset((void *)str, 0, len + 1);
+	ltoa(l, str, len);
+	return puts(str);
+}
+
 void settextmode(const char fg, const char bg)
 {
     attrib = (bg << 4) + (fg & 0x0F);
@@ -121,4 +145,6 @@ void init_video(void)
 {
     vidmem = (unsigned short *)0xB8000;
     cls();
+	
+	puts("Video Initiated!\n");
 }

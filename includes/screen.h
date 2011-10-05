@@ -18,12 +18,15 @@
 #ifndef __SCREEN_H_
 #define __SCREEN_H_
 
+extern int current_line(void);
 extern void update_csr(void);
 extern void clear_line(const int line);
 extern void cls(void);
 extern void scroll(void);
 extern int putc(const char c);
 extern int puts(const char *s);
+extern int puti(const int i);
+extern int putl(const long l);
 extern void settextmode(const char fg, const char bg);
 extern void init_video(void);
 
