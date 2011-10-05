@@ -18,6 +18,16 @@
 #include <timer.h>
 #include <irq.h>
 #include <screen.h>
+#include <string.h>
+
+unsigned long timer_ticks = 0;
+
+void timer_wait(unsigned long ticks)
+{
+	unsigned long wait_for = timer_ticks + ticks;
+	while (wait_for > timer_ticks) puts("");
+	//FIXME: timer_wait(#); goes into inf loop without puts("");
+}
 
 void timer_handler(regs *r)
 {
@@ -26,6 +36,7 @@ void timer_handler(regs *r)
 
 void timer_install(void)
 {
-    timer_ticks = 0;
     irq_install_handler(0, timer_handler);
+	
+	puts("System Timer Handler Installed!\n");
 }

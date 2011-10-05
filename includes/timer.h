@@ -20,8 +20,9 @@
 
 #include <idt.h>
 
-unsigned long timer_ticks;
+extern unsigned long timer_ticks;
 
+extern void timer_wait(unsigned long ticks);
 extern void timer_handler(regs *r);
 extern void timer_install(void);
 
