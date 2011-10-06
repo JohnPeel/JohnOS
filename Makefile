@@ -13,7 +13,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: all build clean dist todolist createfloppy
+.PHONY: all build clean dist todolist
 
 NASM=nasm
 CC=i586-elf-gcc
@@ -61,8 +61,3 @@ dist:
 todolist:
 	-@for file in $(SRCFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
 	-@for file in $(HDRFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
-	
-createfloppy: build
-	@$(shell dd if=/dev/zero of=pad bs=1 count=750)
-	@$(shell cat grub/stage1 grub/stage2 pad kernel.bin > kernel.img)
-	@$(RM) pad
