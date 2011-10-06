@@ -52,3 +52,8 @@ unsigned long inl(unsigned short port)
 	asm("inl %1, %0" : "=a"(ret) : "Nd"(port));
 	return ret;
 }
+
+void io_wait(void)
+{
+	asm( "outb %%al, $0x80" : : "a"(0) );
+}

@@ -19,9 +19,6 @@
 #include <system.h>
 #include <idt.h>
 
-#include <screen.h>
-#include <string.h>
-
 void *irq_routines[16] = {0, };
 
 void irq_install_handler(int irq, void (*handler)(regs *r))
@@ -34,61 +31,56 @@ void irq_uninstall_handler(int irq)
 	irq_routines[irq] = (void *)0;
 }
 
-void irq_remap(void)
+void irq_remap(unsigned char o1, unsigned char o2)
 {
-	outb(0x20, 0x11);
-	outb(0xA0, 0x11);
-	outb(0x21, 0x20);
-	outb(0xA1, 0x28);
-	outb(0x21, 0x04);
-	outb(0xA1, 0x02);
-	outb(0x21, 0x01);
-	outb(0xA1, 0x01);
-	outb(0x21, 0x0);
-	outb(0xA1, 0x0);
+	unsigned char a1, a2;
+	a1 = inb(PIC1_DATA);
+	a2 = inb(PIC2_DATA);
+	
+	outb(PIC1_COMMAND, ICW1_INIT + ICW1_ICW4);
+	io_wait();
+	outb(PIC2_COMMAND, ICW1_INIT + ICW1_ICW4);
+	io_wait();
+	outb(PIC1_DATA, o1);
+	io_wait();
+	outb(PIC2_DATA, o2);
+	io_wait();
+	outb(PIC1_DATA, 0x04);
+	io_wait();
+	outb(PIC2_DATA, 0x02);
+	io_wait();
+	
+	outb(PIC1_DATA, ICW4_8086);
+	io_wait();
+	outb(PIC2_DATA, ICW4_8086);
+	io_wait();
+	
+	outb(PIC1_DATA, a1);
+	outb(PIC2_DATA, a2);
+}
+
+void irq_sendEOI(unsigned char irq)
+{
+	if(irq >= 8)
+		outb(PIC2_COMMAND, PIC_EOI);
+ 
+	outb(PIC1_COMMAND, PIC_EOI);
 }
 
 void irq_handler(regs *r)
 {
-	if (r->int_no > 33) { //Don't show irq0 (timer) or irq1 (keyboard)
-		puts("irq_handler(");
-		puts("\n  gs="); puti((int)r->gs);
-		puts(", fs="); puti((int)r->fs);
-		puts(", es="); puti((int)r->es);
-		puts(", ds="); puti((int)r->ds);
-		puts(",\n  edi="); puti((int)r->edi);
-		puts(", esi="); puti((int)r->esi);
-		puts(", ebp="); puti((int)r->ebp);
-		puts(", esp="); puti((int)r->esp);
-		puts(",\n  ebx="); puti((int)r->ebx);
-		puts(", edx="); puti((int)r->edx);
-		puts(", ecx="); puti((int)r->ecx);
-		puts(", eax="); puti((int)r->eax);
-		puts(",\n  int_no="); puti((int)r->int_no);
-		puts(", err_code="); puti((int)r->err_code);
-		puts(",\n  eip="); puti((int)r->eip);
-		puts(", cs="); puti((int)r->cs);
-		puts(", eflags="); puti((int)r->eflags);
-		puts(", useresp="); puti((int)r->useresp);
-		puts(", ss="); puti((int)r->ss);
-		puts("\n);\n");
-	}
-	
 	void (*handler)(regs *r);
 
 	handler = irq_routines[r->int_no - 32];
 	if (handler)
 	    handler(r);
 
-	if (r->int_no >= 40)
-	    outb(0xA0, 0x20);
-	    
-	outb(0x20, 0x20);
+	irq_sendEOI((unsigned char)(r->int_no - 32));
 }
 
 void irq_install(void)
 {
-	irq_remap();
+	irq_remap(0x20, 0x28);
 	
 	idt_set_gate(32, (unsigned long)irq0, 0x08, 0x8E);
 	idt_set_gate(33, (unsigned long)irq1, 0x08, 0x8E);
@@ -106,7 +98,5 @@ void irq_install(void)
 	idt_set_gate(45, (unsigned long)irq13, 0x08, 0x8E);
 	idt_set_gate(46, (unsigned long)irq14, 0x08, 0x8E);
 	idt_set_gate(47, (unsigned long)irq15, 0x08, 0x8E);
-	
-	puts("IRQ Installed!\n");
 }
 

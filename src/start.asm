@@ -38,9 +38,12 @@ mboot:
 	
 start:
 	mov esp, _sys_stack
-	call main
-	cli
+	push eax
+	push ebx
 	
+	call main
+
+	cli	
 hang:
 	hlt
 	jmp hang

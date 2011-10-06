@@ -16,7 +16,6 @@
 */
 
 #include <idt.h>
-#include <screen.h>
 #include <string.h>
 
 struct idt_entry idt[256];
@@ -40,6 +39,4 @@ void idt_install(void)
 	memset(&idt, 0, sizeof(struct idt_entry) * 256);
 	
 	idt_load();
-	
-	puts("IDT Installed!\n");
 }

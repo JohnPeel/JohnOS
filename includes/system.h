@@ -26,5 +26,6 @@ extern void outl(unsigned short port, unsigned long val);
 extern unsigned char inb(unsigned short port);
 extern unsigned int inw(unsigned short port);
 extern unsigned long inl(unsigned short port);
+extern void io_wait(void);
 
 #endif

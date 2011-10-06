@@ -17,13 +17,13 @@
 
 #include <isrs.h>
 #include <idt.h>
-#include <screen.h>
+#include <console.h>
 
 const char *exceptions[] =
 {
 	"Division By Zero",
 	"Debug",
-	"Non Maskable Interrupt",
+	"Non-Maskable Interrupt",
 	"Breakpoint",
 	"Into Detected Overflow",
 	"Out of Bounds",
@@ -36,10 +36,11 @@ const char *exceptions[] =
 	"Stack Fault",
 	"General Protection Fault",
 	"Page Fault",
-	"Unknown Interrupt",
+	"Reserved",
 	"Coprocessor Fault",
 	"Alignment Check",
 	"Machine Check",
+	"Floating-Point Exception",
 	"Reserved",
 	"Reserved",
 	"Reserved",
@@ -50,8 +51,7 @@ const char *exceptions[] =
 	"Reserved",
 	"Reserved",
 	"Reserved",
-	"Reserved",
-	"Reserved",
+	"Security Exception",
 	"Reserved"
 };
 
@@ -59,8 +59,8 @@ void fault_handler(regs *r)
 {
 	if (r->int_no < 32)
 	{
-	    puts(exceptions[r->int_no]);
-	    puts(" Exception. System Halted!\n");
+	    //puts(exceptions[r->int_no]);
+	    //puts(" Exception. System Halted!\n");
 	    for (;;);
 	}
 }
@@ -99,6 +99,4 @@ void isrs_install(void)
 	idt_set_gate(29, (unsigned long)isr29, 0x08, 0x8E);
 	idt_set_gate(30, (unsigned long)isr30, 0x08, 0x8E);
 	idt_set_gate(31, (unsigned long)isr31, 0x08, 0x8E);
-	
-	puts("ISRS Installed!\n");
 }

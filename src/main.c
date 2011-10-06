@@ -18,6 +18,7 @@
 #include <main.h>
 #include <system.h>
 #include <screen.h>
+#include <console.h>
 #include <gdt.h>
 #include <idt.h>
 #include <isrs.h>
@@ -25,11 +26,19 @@
 #include <timer.h>
 #include <string.h>
 #include <keyboard.h>
-#include <mouse.h>
 
-void main(void)
+const char *version = "0.1a";
+
+void main(void *mbd, unsigned int magic)
 {
+	if (magic != 0x2BADB002)
+	{
+		//PROBLEM! Can't use mbd....
+		for (;;); //hlt
+	}
+	
 	init_video();
+	console_setup();
 	
 	gdt_install();
 	idt_install();
@@ -37,14 +46,9 @@ void main(void)
 	irq_install();
 	timer_install();
 	keyboard_install();
-	mouse_install();
 	
-	keyboard_updateleds();
-	
-	putc('\n');
 	asm("sti");
 	
-	//TODO: umm more os code?
-	
+	//TODO: The Rest?
 	for (;;);
 }

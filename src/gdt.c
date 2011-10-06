@@ -16,7 +16,6 @@
 */
 
 #include <gdt.h>
-#include <screen.h>
 
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
@@ -42,6 +41,4 @@ void gdt_install(void)
 	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 	
 	gdt_flush();
-	
-	puts("GDT Installed!\n");
 }

@@ -19,28 +19,12 @@
 #include <system.h>
 #include <string.h>
 
-unsigned short *vidmem;
-int attrib = 0x0F;
-int csr_x = 0, csr_y = 0;
-
-int current_line(void)
-{
-	return csr_y;
-}
-
-void update_csr(void)
-{
-	unsigned int c = (unsigned int)((csr_y * 80) + csr_x);
-	
-	outb(0x3D4, 14);
-	outb(0x3D5, (unsigned char)((c >> 8) & 0xFF));
-	outb(0x3D4, 15);
-	outb(0x3D5, (unsigned char)(c & 0xFF));
-}
+unsigned short *vmem;
+unsigned short attrib = 0x07;
 
 void clear_line(const int line)
 {
-	memsetw(vidmem + (line * 80), 0x20 + (attrib << 8), 80);
+	memsetw(vmem + (line * 80), 0x20 + (attrib << 8), 80);
 }
 
 void cls(void)
@@ -48,103 +32,64 @@ void cls(void)
 	int i;
 	for (i = 0; i < 25; i++)
 		clear_line(i);
-	
-	csr_x = 0;
-	csr_y = 0;
-	update_csr();
 }
 
-void scroll(void)
+void update_csr(const unsigned char x, const unsigned char y)
 {
-	unsigned short temp;
+	unsigned int c = (unsigned int)((y * 80) + x);
 	
-	if(csr_y >= 25)
-	{
-		temp = (unsigned short)(csr_y - 25 + 1);
-		memcpy(vidmem, vidmem + (temp * 80), ((25 - temp) * 80) * 2);
-		clear_line(25 - temp);
-		csr_y = 25 - 1;
-	}
-	update_csr();
+	outb(0x3D4, 14);
+	io_wait();
+	outb(0x3D5, (unsigned char)((c >> 8) & 0xFF));
+	io_wait();
+	outb(0x3D4, 15);
+	io_wait();
+	outb(0x3D5, (unsigned char)(c & 0xFF));
+	io_wait();
 }
 
-int putc(const char c)
+void set_char(unsigned char x, unsigned char y, const char c)
 {
-	int r = 1;
-	if ((c == 0x08) && (csr_x != 0))
-	{
-		csr_x--;
-	}
-	else if(c == 0x09)
-	{
-		csr_x = (csr_x + 8) & ~(8 - 1);
-	}
-	else if(c == '\r')
-	{
-		csr_x = 0;
-	}
-	else if(c == '\n')
-	{
-		csr_x = 0;
-		csr_y++;
-	}
-	else if(c >= ' ')
-	{
-		unsigned short *where = vidmem + (csr_y * 80 + csr_x);
-		*where = (unsigned short)(c | (attrib << 8));
-		csr_x++;
-	}
-	else
-	{
-		r = 0;
-	}
-	
-	if(csr_x >= 80)
-	{
-		csr_x = 0;
-		csr_y++;
-	}
-	
-	scroll();
-	update_csr();
-	return r;
+	unsigned int *n = (unsigned int *)&vmem[y * 80 + x];
+	*n = (unsigned int)(c | (attrib << 8));
 }
 
-int puts(const char *s)
-{
+void set_line(const int line, const char *str) {
+	clear_line(line);
+	unsigned char x = 0, y = (unsigned char)line;
 	int i;
-	for (i = 0; i < strlen(s); i++) 
-		putc(s[i]);
-	return i;
+	for (i = 0; i < strlen(str); i++) {
+		switch (str[i]) {
+			case '\n':
+				x = 0;
+				y++;
+				break;
+			case 0x09:
+				x = (unsigned char)((x + 8) & ~(8 - 1));
+				break;
+			case '\r':
+				x = 0;
+				break;
+			default:
+				set_char(x++, y, str[i]);
+				break;
+		}
+		
+		if (x >= 80) {
+			x = 0;
+			y++;
+		}
+	}
+	update_csr(x, y);
 }
 
-int puti(const int i)
+void setattrib(const char fg, const char bg)
 {
-	int len = ilen(i);
-	char str[len + 1];
-	memset((void *)str, 0, len + 1);
-	itoa(i, str, len);
-	return puts(str);
-}
-
-int putl(const long l)
-{
-	int len = llen(l);
-	char str[len + 1];
-	memset((void *)str, 0, len + 1);
-	ltoa(l, str, len);
-	return puts(str);
-}
-
-void settextmode(const char fg, const char bg)
-{
-	attrib = (bg << 4) + (fg & 0x0F);
+	attrib = (unsigned short)((bg << 4) + (fg & 0x0F));
 }
 
 void init_video(void)
 {
-	vidmem = (unsigned short *)0xB8000;
+	vmem = (unsigned short *)0xB8000;
 	cls();
-	
-	puts("Video Initiated!\n");
 }

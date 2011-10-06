@@ -25,11 +25,5 @@ extern void *memcpyw(void *dest, void *src, size_t num);
 extern void *memset(void *ptr, const int value, size_t num);
 extern void *memsetw(void *ptr, const int value, size_t num);
 extern size_t strlen(const char *str);
-extern long pow(const long base, const long exp);
-extern size_t llen(const long l);
-extern size_t ilen(const int i);
-extern char *ltoa(const long l, char *d, const size_t len);
-extern char *itoa(const int i, char *d, const size_t len);
-
 
 #endif

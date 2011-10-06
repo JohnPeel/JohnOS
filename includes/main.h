@@ -18,6 +18,7 @@
 #ifndef __MAIN_H_
 #define __MAIN_H_
 
-extern void main(void);
+extern const char *version;
+extern void main(void *mbd, unsigned int magic);
 
 #endif

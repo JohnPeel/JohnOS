@@ -18,8 +18,6 @@
 #include <keyboard.h>
 #include <irq.h>
 #include <system.h>
-
-#include <screen.h>
 #include <string.h>
 
 unsigned char keyboard_mods = MOD_NONE;
@@ -67,7 +65,7 @@ int keyboard_uppercase(void) {
 
 void keyboard_handler(regs *r)
 {
-	unsigned char scancode = inb(0x60);
+	/* unsigned char scancode = inb(0x60);
 	
 	switch (scancode) {
 		case 0x01: //Escape
@@ -448,12 +446,12 @@ void keyboard_handler(regs *r)
 	}
 	
 	if (((keyboard_mods & MOD_E0) == MOD_E0) && (scancode != 0xe0))
-		keyboard_togglemod(MOD_E0);
+		keyboard_togglemod(MOD_E0); */
 }
 
 void keyboard_install(void)
 {
 	irq_install_handler(1, keyboard_handler);
 	
-	puts("Keyboard Handler Installed! (Unfinished!)\n");
+	keyboard_updateleds();
 }

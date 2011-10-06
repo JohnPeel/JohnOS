@@ -15,18 +15,9 @@
 	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SCREEN_H_
-#define __SCREEN_H_
+#ifndef __CONSOLE_H_
+#define __CONSOLE_H_
 
-extern unsigned short *vmem;
-extern unsigned short attrib;
-
-extern void clear_line(const int line);
-extern void cls(void);
-extern void update_csr(const unsigned char x, const unsigned char y);
-extern void set_char(unsigned char x, unsigned char y, const char c);
-extern void set_line(const int line, const char *str);
-extern void setattrib(const char fg, const char bg);
-extern void init_video(void);
+extern void console_setup(void);
 
 #endif
