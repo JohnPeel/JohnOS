@@ -18,15 +18,19 @@
 #ifndef __SCREEN_H_
 #define __SCREEN_H_
 
-extern unsigned short *vmem;
-extern unsigned short attrib;
+#include <stdint.h>
 
-extern void clear_line(const int line);
+#define LINE_LENGTH 0x50
+
+extern uint16_t *vmem;
+extern uint8_t attrib;
+
+extern void clear_line(const uint8_t line);
 extern void cls(void);
-extern void update_csr(const unsigned char x, const unsigned char y);
-extern void set_char(unsigned char x, unsigned char y, const char c);
-extern void set_line(const int line, const char *str);
-extern void setattrib(const char fg, const char bg);
+extern void update_csr(const uint8_t x, const uint8_t y);
+extern void set_char(uint8_t x, uint8_t y, const uint8_t c);
+extern void set_line(const uint8_t line, const int8_t *str);
+extern void setattrib(const uint8_t fg, const uint8_t bg);
 extern void init_video(void);
 
 #endif

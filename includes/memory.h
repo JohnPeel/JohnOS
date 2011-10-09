@@ -15,13 +15,19 @@
 	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MAIN_H_
-#define __MAIN_H_
+#ifndef __MEMORY_H_
+#define __MEMORY_H_
 
-#include <stdint.h>
-#include <mb_info.h>
+#include <string.h>
 
-extern const char *version;
-extern void main(const struct multiboot_info *mbd, uint32_t magic);
+#ifndef NULL
+#	define NULL ((void *)0)
+#endif
+
+extern void free(void *ptr);
+extern void *malloc(size_t size);
+extern void *calloc(size_t nobj, size_t size);
+extern void *realloc(void *p, size_t size);
+extern void memory_init(void);
 
 #endif

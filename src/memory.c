@@ -15,13 +15,41 @@
 	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MAIN_H_
-#define __MAIN_H_
+#include <memory.h>
+#include <console.h>
 
-#include <stdint.h>
-#include <mb_info.h>
+void free(void *ptr)
+{
+	//TODO: free();
+	return;
+}
 
-extern const char *version;
-extern void main(const struct multiboot_info *mbd, uint32_t magic);
+void *malloc(size_t size)
+{
+	//TODO: malloc();
+	return NULL;
+}
 
-#endif
+void *calloc(size_t nobj, size_t size)
+{
+	void *temp = malloc(nobj * size);
+	if (temp != NULL)
+		memset(temp, 0, nobj * size);
+	return temp;
+}
+
+void *realloc(void *p, size_t size) 
+{
+	void *new = malloc(size);
+	if (new == NULL)
+		return NULL;
+	//FIXME: realloc, memcpy(new, p, memory_sizeof(p));
+	free(p);
+	return new;
+}
+
+void memory_init(void)
+{
+	//TODO: memory_init, Add free mem from multiboot_info?
+	console_print("Memory Manager Initiated. (Unstarted)");
+}

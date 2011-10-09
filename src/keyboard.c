@@ -19,6 +19,7 @@
 #include <irq.h>
 #include <system.h>
 #include <string.h>
+#include <console.h>
 
 unsigned char keyboard_mods = MOD_NONE;
 unsigned char keyboard_leds = LED_NONE;
@@ -220,7 +221,7 @@ void keyboard_handler(regs *r)
 		case 180:
 		case 53: ///
 		case 181:
-		case 55: //*
+		case 55: // *
 		case 183:
 			break;
 		
@@ -452,6 +453,7 @@ void keyboard_handler(regs *r)
 void keyboard_install(void)
 {
 	irq_install_handler(1, keyboard_handler);
+	console_print("Keyboard (IRQ1) Handler Installed.");
 	
 	keyboard_updateleds();
 }

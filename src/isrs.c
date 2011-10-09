@@ -57,11 +57,11 @@ const char *exceptions[] =
 
 void fault_handler(regs *r)
 {
-	if (r->int_no < 32)
-	{
-	    //puts(exceptions[r->int_no]);
-	    //puts(" Exception. System Halted!\n");
-	    for (;;);
+	if (r->int_no < 32) {
+		console_print("");
+		console_print(exceptions[r->int_no]);
+		console_print(" Exception. System Halted!");
+		for (;;);
 	}
 }
 
@@ -99,4 +99,6 @@ void isrs_install(void)
 	idt_set_gate(29, (unsigned long)isr29, 0x08, 0x8E);
 	idt_set_gate(30, (unsigned long)isr30, 0x08, 0x8E);
 	idt_set_gate(31, (unsigned long)isr31, 0x08, 0x8E);
+
+	console_print("Interrupt Service Routine (ISR) Handlers Installed.");
 }

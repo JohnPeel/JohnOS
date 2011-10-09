@@ -15,13 +15,9 @@
 	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __MAIN_H_
-#define __MAIN_H_
+#ifndef __MATH_H_
+#define __MATH_H_
 
-#include <stdint.h>
-#include <mb_info.h>
-
-extern const char *version;
-extern void main(const struct multiboot_info *mbd, uint32_t magic);
+extern long pow(long b, long e);
 
 #endif

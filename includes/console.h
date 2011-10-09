@@ -18,6 +18,18 @@
 #ifndef __CONSOLE_H_
 #define __CONSOLE_H_
 
+#include <stdint.h>
+
+#define CONSOLE_LINE_LENGTH 0x4E
+#define CONSOLE_BUFFER_LENGTH 0x666
+
+extern int8_t buffer[CONSOLE_BUFFER_LENGTH];
+
+extern void console_clear_line(const uint8_t line);
+extern void console_clear(void);
+extern void console_update(void);
+extern void console_set_line(const uint8_t line, const int8_t *s);
+extern void console_print(const char *s);
 extern void console_setup(void);
 
 #endif

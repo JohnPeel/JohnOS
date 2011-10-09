@@ -17,6 +17,7 @@
 
 #include <main.h>
 #include <system.h>
+#include <memory.h>
 #include <screen.h>
 #include <console.h>
 #include <gdt.h>
@@ -27,28 +28,42 @@
 #include <string.h>
 #include <keyboard.h>
 
-const char *version = "0.1a";
+const char *version = "v0.1a";
 
-void main(void *mbd, unsigned int magic)
+void main(const struct multiboot_info *mbi, uint32_t magic)
 {
-	if (magic != 0x2BADB002)
-	{
-		//PROBLEM! Can't use mbd....
-		for (;;); //hlt
-	}
-	
 	init_video();
 	console_setup();
-	
+
+	if (magic != MULTIBOOT_VALID)
+	{
+		console_print("Problem with magicboot info! Halting System.");
+		for(;;);
+	}
+
+	memory_init();
+	/*
+	if ((mbi->flags & MB_INFO_MEM_MAP) == MB_INFO_MEM_MAP) {
+		struct AddrRangeDesc *mmap = (struct AddrRangeDesc *)mbi->mmap_addr;
+		while ((unsigned int)mmap < mbi->mmap_addr + mbi->mmap_length) {
+			if ((mmap->Type & MB_ARD_MEMORY) == MB_ARD_MEMORY) {
+				...
+			}
+			mmap = (struct AddrRangeDesc *)((unsigned int)mmap + mmap->size + sizeof(unsigned int));
+		}
+	}
+	*/
+
 	gdt_install();
 	idt_install();
 	isrs_install();
 	irq_install();
 	timer_install();
 	keyboard_install();
-	
+
 	asm("sti");
-	
+
 	//TODO: The Rest?
+
 	for (;;);
 }

@@ -18,7 +18,7 @@
 #ifndef __GDT_H_
 #define __GDT_H_
 
-struct gdt_entry 
+struct gdt_entry
 {
 	unsigned short limit_low;
 	unsigned short base_low;
@@ -28,7 +28,7 @@ struct gdt_entry
 	unsigned char base_high;
 } __attribute__((packed));
 
-struct gdt_ptr 
+struct gdt_ptr
 {
 	unsigned short limit;
 	unsigned int base;

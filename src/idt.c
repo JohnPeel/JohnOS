@@ -17,6 +17,7 @@
 
 #include <idt.h>
 #include <string.h>
+#include <console.h>
 
 struct idt_entry idt[256];
 struct idt_ptr idtp;
@@ -25,7 +26,7 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 {
 	idt[num].base_lo = (base & 0xFFFF);
 	idt[num].base_hi = (unsigned short)((base >> 16) & 0xFFFF);
-	
+
 	idt[num].sel = sel;
 	idt[num].always0 = 0;
 	idt[num].flags = flags;
@@ -33,10 +34,12 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 
 void idt_install(void)
 {
-	idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
+	idtp.limit = (sizeof(struct idt_entry) * 256) - 1;
 	idtp.base = (unsigned int)&idt;
-	
+
 	memset(&idt, 0, sizeof(struct idt_entry) * 256);
-	
+
 	idt_load();
+
+	console_print("Interrupt Descriptor Table (IDT) Installed.");
 }

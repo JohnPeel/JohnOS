@@ -55,5 +55,5 @@ unsigned long inl(unsigned short port)
 
 void io_wait(void)
 {
-	asm( "outb %%al, $0x80" : : "a"(0) );
+	asm("outb %%al, $0x80" : : "a"(0));
 }

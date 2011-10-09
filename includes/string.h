@@ -18,12 +18,17 @@
 #ifndef __STRING_H_
 #define __STRING_H_
 
-typedef int size_t;
+#include <stdint.h>
+typedef int32_t size_t;
 
-extern void *memcpy(void *dest, void *src, size_t num);
-extern void *memcpyw(void *dest, void *src, size_t num);
-extern void *memset(void *ptr, const int value, size_t num);
-extern void *memsetw(void *ptr, const int value, size_t num);
-extern size_t strlen(const char *str);
+extern void *memcpy(void *s, const void *ct, size_t n);
+extern void *memmove(void *s, const void *ct, size_t n);
+extern int memcmp(const void *cs, const void *ct, size_t n);
+extern void *memchr(const void *cs, int c, size_t n);
+extern void *memset(void *s, int c, size_t n);
+extern void *memsetw(void *s, int c, size_t n);
+
+extern size_t strlen(const void *cs);
+extern char *strcpy(void *s, const void *ct);
 
 #endif

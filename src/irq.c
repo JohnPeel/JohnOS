@@ -18,6 +18,7 @@
 #include <irq.h>
 #include <system.h>
 #include <idt.h>
+#include <console.h>
 
 void *irq_routines[16] = {0, };
 
@@ -36,25 +37,21 @@ void irq_remap(unsigned char o1, unsigned char o2)
 	unsigned char a1, a2;
 	a1 = inb(PIC1_DATA);
 	a2 = inb(PIC2_DATA);
-	
+
 	outb(PIC1_COMMAND, ICW1_INIT + ICW1_ICW4);
-	io_wait();
 	outb(PIC2_COMMAND, ICW1_INIT + ICW1_ICW4);
 	io_wait();
 	outb(PIC1_DATA, o1);
-	io_wait();
 	outb(PIC2_DATA, o2);
 	io_wait();
 	outb(PIC1_DATA, 0x04);
-	io_wait();
 	outb(PIC2_DATA, 0x02);
 	io_wait();
-	
+
 	outb(PIC1_DATA, ICW4_8086);
-	io_wait();
 	outb(PIC2_DATA, ICW4_8086);
 	io_wait();
-	
+
 	outb(PIC1_DATA, a1);
 	outb(PIC2_DATA, a2);
 }
@@ -63,7 +60,7 @@ void irq_sendEOI(unsigned char irq)
 {
 	if(irq >= 8)
 		outb(PIC2_COMMAND, PIC_EOI);
- 
+
 	outb(PIC1_COMMAND, PIC_EOI);
 }
 
@@ -73,7 +70,7 @@ void irq_handler(regs *r)
 
 	handler = irq_routines[r->int_no - 32];
 	if (handler)
-	    handler(r);
+		handler(r);
 
 	irq_sendEOI((unsigned char)(r->int_no - 32));
 }
@@ -81,7 +78,7 @@ void irq_handler(regs *r)
 void irq_install(void)
 {
 	irq_remap(0x20, 0x28);
-	
+
 	idt_set_gate(32, (unsigned long)irq0, 0x08, 0x8E);
 	idt_set_gate(33, (unsigned long)irq1, 0x08, 0x8E);
 	idt_set_gate(34, (unsigned long)irq2, 0x08, 0x8E);
@@ -98,5 +95,7 @@ void irq_install(void)
 	idt_set_gate(45, (unsigned long)irq13, 0x08, 0x8E);
 	idt_set_gate(46, (unsigned long)irq14, 0x08, 0x8E);
 	idt_set_gate(47, (unsigned long)irq15, 0x08, 0x8E);
+
+	console_print("Interrupt Request (IRQ) Handlers Installed.");
 }
 

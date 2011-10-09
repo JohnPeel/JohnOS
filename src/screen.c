@@ -19,45 +19,46 @@
 #include <system.h>
 #include <string.h>
 
-unsigned short *vmem;
-unsigned short attrib = 0x07;
+uint16_t *vmem;
+uint8_t attrib = 0x07;
 
-void clear_line(const int line)
+void clear_line(const uint8_t line)
 {
 	memsetw(vmem + (line * 80), 0x20 + (attrib << 8), 80);
 }
 
 void cls(void)
 {
-	int i;
+	uint8_t i;
 	for (i = 0; i < 25; i++)
 		clear_line(i);
 }
 
-void update_csr(const unsigned char x, const unsigned char y)
+void update_csr(const uint8_t x, const uint8_t y)
 {
-	unsigned int c = (unsigned int)((y * 80) + x);
-	
+	uint16_t c = (uint16_t)((y * 80) + x);
+
 	outb(0x3D4, 14);
 	io_wait();
-	outb(0x3D5, (unsigned char)((c >> 8) & 0xFF));
+	outb(0x3D5, (uint8_t)((c >> 8) & 0xFF));
 	io_wait();
 	outb(0x3D4, 15);
 	io_wait();
-	outb(0x3D5, (unsigned char)(c & 0xFF));
+	outb(0x3D5, (uint8_t)(c & 0xFF));
 	io_wait();
 }
 
-void set_char(unsigned char x, unsigned char y, const char c)
+void set_char(uint8_t x, uint8_t y, const uint8_t c)
 {
-	unsigned int *n = (unsigned int *)&vmem[y * 80 + x];
-	*n = (unsigned int)(c | (attrib << 8));
+	uint16_t *n = &vmem[y * 80 + x];
+	*n = (uint16_t)(c | (attrib << 8));
 }
 
-void set_line(const int line, const char *str) {
+void set_line(const uint8_t line, const int8_t *str)
+{
 	clear_line(line);
-	unsigned char x = 0, y = (unsigned char)line;
-	int i;
+	uint8_t x = 0, y = line;
+	int32_t i;
 	for (i = 0; i < strlen(str); i++) {
 		switch (str[i]) {
 			case '\n':
@@ -65,13 +66,13 @@ void set_line(const int line, const char *str) {
 				y++;
 				break;
 			case 0x09:
-				x = (unsigned char)((x + 8) & ~(8 - 1));
+				x = (uint8_t)((x + 8) & ~(8 - 1));
 				break;
 			case '\r':
 				x = 0;
 				break;
 			default:
-				set_char(x++, y, str[i]);
+				set_char(x++, y, (uint8_t)str[i]);
 				break;
 		}
 		
@@ -83,13 +84,13 @@ void set_line(const int line, const char *str) {
 	update_csr(x, y);
 }
 
-void setattrib(const char fg, const char bg)
+void setattrib(const uint8_t fg, const uint8_t bg)
 {
-	attrib = (unsigned short)((bg << 4) + (fg & 0x0F));
+	attrib = (uint8_t)((bg << 4) + (fg & 0x0F));
 }
 
 void init_video(void)
 {
-	vmem = (unsigned short *)0xB8000;
+	vmem = (uint16_t *)0xB8000;
 	cls();
 }

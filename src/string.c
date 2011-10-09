@@ -16,39 +16,80 @@
 */
 
 #include <string.h>
+#include <memory.h> /* for NULL, maybe we need stddef.h? */
 
-void *memcpy(void *dest, void *src, size_t num)
+void *memcpy(void *s, const void *ct, size_t n)
 {
-	unsigned char *d = dest, *s = src;
-	for (; num >= 0; num--) *d++ = *s++;
+	char *dest = s;
+	const char *src = ct;
+
+	for (; n >= 0; n--)
+		dest[n] = src[n];
+
 	return dest;
 }
 
-void *memcpyw(void *dest, void *src, size_t num)
+void *memmove(void *s, const void *ct, size_t n)
 {
-	unsigned short *d = dest, *s = src;
-	for (; num >= 0; num--) *d++ = *s++;
-	return dest;
+	uint8_t *dest = s;
+	const uint8_t *src = ct;
+
+	int32_t i;
+	for (i = 0; i < n; i++)
+		dest[i] = src[i];
+
+	return s;
 }
 
-void *memset(void *ptr, const int value, size_t num)
+int memcmp(const void *cs, const void *ct, size_t n)
 {
-	unsigned char *dest = ptr;
-	for (; num >= 0; num--) *dest++ = (unsigned char)value;
-	return dest;
+	const uint8_t *s = cs, *t = ct;
+
+	int tmp = 0;
+	for (; n >= 0; n--)
+		tmp += (s[n] > t[n] ? 1 : (s[n] < t[n] ? -1 : 0));
+	return tmp;
 }
 
-void *memsetw(void *ptr, const int value, size_t num)
+void *memchr(const void *cs, int c, size_t n)
 {
-	unsigned short *dest = ptr;
-	for (; num >= 0; num--) *dest++ = (unsigned short)value;
-	return dest;
+	const uint8_t *src = cs;
+
+	for (; n >= 0; n--)
+		if (src[n] == (uint8_t)c)
+			return (void *)&src[n]; /* void *, suppresses warning */
+
+	return NULL;
 }
 
-size_t strlen(const char *str)
+void *memset(void *s, int c, size_t n)
 {
-  size_t len;
-  for (len = 0; str[len] != '\0'; len++);
-  return len;
+	uint8_t *dest = s;
+
+	for (; n >= 0; n--)
+		dest[n] = (uint8_t)c;
+
+	return s;
 }
 
+void *memsetw(void *s, int c, size_t n)
+{
+	uint16_t *dest = s;
+
+	for (; n >= 0; n--)
+		dest[n] = (uint16_t)c;
+
+	return s;
+}
+
+size_t strlen(const void *cs) {
+	const uint8_t *str = cs;
+
+	size_t tmp;
+	for (tmp = 0; str[tmp] != '\0'; tmp++);
+	return tmp;
+}
+
+char *strcpy(void *s, const void *ct) {
+	return (char *)memcpy(s, ct, strlen(ct));
+}
