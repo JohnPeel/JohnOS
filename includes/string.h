@@ -21,6 +21,8 @@
 #include <stdint.h>
 typedef int32_t size_t;
 
+#define MIN(x, y) (x >= y ? x : y)
+
 extern void *memcpy(void *s, const void *ct, size_t n);
 extern void *memmove(void *s, const void *ct, size_t n);
 extern int memcmp(const void *cs, const void *ct, size_t n);
@@ -28,7 +30,12 @@ extern void *memchr(const void *cs, int c, size_t n);
 extern void *memset(void *s, int c, size_t n);
 extern void *memsetw(void *s, int c, size_t n);
 
-extern size_t strlen(const void *cs);
 extern char *strcpy(void *s, const void *ct);
+extern char *strncpy(void *s, const void *ct, size_t n);
+extern char *strcat(void *s, const void *ct);
+extern char *strncat(void *s, const void *ct, size_t n);
+extern int strcmp(const void *cs, const void *ct);
+extern int strncmp(const void *cs, const void *ct, size_t n);
+extern size_t strlen(const void *cs);
 
 #endif

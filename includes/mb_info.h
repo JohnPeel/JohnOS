@@ -27,15 +27,15 @@
 #include <stdint.h>
 
 struct mod_list {
-    /* the memory used goes from bytes 'mod_start' to 'mod_end-1' inclusive */
-    uint32_t mod_start;
-    uint32_t mod_end;
+	/* the memory used goes from bytes 'mod_start' to 'mod_end-1' inclusive */
+	uint32_t mod_start;
+	uint32_t mod_end;
 
-    /* Module command line */
-    uint32_t cmdline;
+	/* Module command line */
+	uint32_t cmdline;
 
-    /* padding to take it to 16 bytes (must be zero) */
-    uint32_t pad;
+	/* padding to take it to 16 bytes (must be zero) */
+	uint32_t pad;
 };
 
 /*
@@ -46,11 +46,11 @@ struct mod_list {
  */
 
 struct AddrRangeDesc {
-    uint32_t size;
-    uint64_t BaseAddr;
-    uint64_t Length;
-    uint32_t Type;
-    /* unspecified optional padding... */
+	uint32_t size;
+	uint64_t BaseAddr;
+	uint64_t Length;
+	uint32_t Type;
+	/* unspecified optional padding... */
 } __attribute__ ((packed));
 
 /* usable memory "Type", all others are reserved.  */
@@ -58,22 +58,22 @@ struct AddrRangeDesc {
 
 /* Drive Info structure.  */
 struct drive_info {
-    /* The size of this structure.  */
-    uint32_t size;
+	/* The size of this structure.  */
+	uint32_t size;
 
-    /* The BIOS drive number.  */
-    uint8_t drive_number;
+	/* The BIOS drive number.  */
+	uint8_t drive_number;
 
-    /* The access mode (see below).  */
-    uint8_t drive_mode;
+	/* The access mode (see below).  */
+	uint8_t drive_mode;
 
-    /* The BIOS geometry.  */
-    uint16_t drive_cylinders;
-    uint8_t drive_heads;
-    uint8_t drive_sectors;
+	/* The BIOS geometry.  */
+	uint16_t drive_cylinders;
+	uint8_t drive_heads;
+	uint8_t drive_sectors;
 
-    /* The array of I/O ports used for the drive.  */
-    uint16_t drive_ports[0];
+	/* The array of I/O ports used for the drive.  */
+	uint16_t drive_ports[0];
 };
 
 /* Drive Mode.  */
@@ -82,14 +82,14 @@ struct drive_info {
 
 /* APM BIOS info.  */
 struct apm_info {
-    uint16_t version;
-    uint16_t cseg;
-    uint32_t offset;
-    uint16_t cseg_16;
-    uint16_t dseg_16;
-    uint16_t cseg_len;
-    uint16_t cseg_16_len;
-    uint16_t dseg_16_len;
+	uint16_t version;
+	uint16_t cseg;
+	uint32_t offset;
+	uint16_t cseg_16;
+	uint16_t dseg_16;
+	uint16_t cseg_len;
+	uint16_t cseg_16_len;
+	uint16_t dseg_16_len;
 };
 
 /*
@@ -100,64 +100,65 @@ struct apm_info {
  */
 
 struct multiboot_info {
-    /* MultiBoot info version number */
-    uint32_t flags;
+	/* MultiBoot info version number */
+	uint32_t flags;
 
-    /* Available memory from BIOS */
-    uint32_t mem_lower;
-    uint32_t mem_upper;
+	/* Available memory from BIOS */
+	uint32_t mem_lower;
+	uint32_t mem_upper;
 
-    /* "root" partition */
-    uint32_t boot_device;
+	/* "root" partition */
+	uint32_t boot_device;
 
-    /* Kernel command line */
-    uint32_t cmdline;
+	/* Kernel command line */
+	uint32_t cmdline;
 
-    /* Boot-Module list */
-    uint32_t mods_count;
-    uint32_t mods_addr;
+	/* Boot-Module list */
+	uint32_t mods_count;
+	uint32_t mods_addr;
 
-    union {
-	struct {
-	    /* (a.out) Kernel symbol table info */
-	    uint32_t tabsize;
-	    uint32_t strsize;
-	    uint32_t addr;
-	    uint32_t pad;
-	} a;
-	struct {
-	    /* (ELF) Kernel section header table */
-	    uint32_t num;
-	    uint32_t size;
-	    uint32_t addr;
-	    uint32_t shndx;
-	} e;
-    } syms;
+	union {
+		struct {
+			/* (a.out) Kernel symbol table info */
+			uint32_t tabsize;
+			uint32_t strsize;
+			uint32_t addr;
+			uint32_t pad;
+		} a;
 
-    /* Memory Mapping buffer */
-    uint32_t mmap_length;
-    uint32_t mmap_addr;
+		struct {
+			/* (ELF) Kernel section header table */
+			uint32_t num;
+			uint32_t size;
+			uint32_t addr;
+			uint32_t shndx;
+		} e;
+	} syms;
 
-    /* Drive Info buffer */
-    uint32_t drives_length;
-    uint32_t drives_addr;
+	/* Memory Mapping buffer */
+	uint32_t mmap_length;
+	uint32_t mmap_addr;
 
-    /* ROM configuration table */
-    uint32_t config_table;
+	/* Drive Info buffer */
+	uint32_t drives_length;
+	uint32_t drives_addr;
 
-    /* Boot Loader Name */
-    uint32_t boot_loader_name;
+	/* ROM configuration table */
+	uint32_t config_table;
 
-    /* APM table */
-    uint32_t apm_table;
+	/* Boot Loader Name */
+	uint32_t boot_loader_name;
 
-    /* Video */
-    uint32_t vbe_control_info;
-    uint32_t vbe_mode_info;
-    uint16_t vbe_mode;
-    uint16_t vbe_interface_seg;
-    uint16_t vbe_interface_off;
-    uint16_t vbe_interface_len;
+	/* APM table */
+	uint32_t apm_table;
+
+	/* Video */
+	uint32_t vbe_control_info;
+	uint32_t vbe_mode_info;
+	uint16_t vbe_mode;
+	uint16_t vbe_interface_seg;
+	uint16_t vbe_interface_off;
+	uint16_t vbe_interface_len;
 };
 
 /*
