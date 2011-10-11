@@ -14,37 +14,32 @@
 ;	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 
 [BITS 32]
-global start
+global loader
 extern main
 
+MULTIBOOT_PAGE_ALIGN equ 1 << 0
+MULTIBOOT_MEMORY_INFO equ 1 << 1
+MULTIBOOT_HEADER_MAGIC equ 0x1BADB002
+MULTIBOOT_HEADER_FLAGS equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
+MULTIBOOT_CHECKSUM equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
+
+SECTION .text
 ALIGN 4
 mboot:
-	MULTIBOOT_PAGE_ALIGN equ 1 << 0
-	MULTIBOOT_MEMORY_INFO equ 1 << 1
-	MULTIBOOT_VIDEO_MODE equ 1 << 2
-	MULTIBOOT_AOUT_KLUDGE equ 1 << 16
-	MULTIBOOT_HEADER_MAGIC equ 0x1BADB002
-	MULTIBOOT_HEADER_FLAGS equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_VIDEO_MODE | MULTIBOOT_AOUT_KLUDGE
-	MULTIBOOT_CHECKSUM equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
-	EXTERN code, bss, end
-
 	dd MULTIBOOT_HEADER_MAGIC
 	dd MULTIBOOT_HEADER_FLAGS
 	dd MULTIBOOT_CHECKSUM
-	dd mboot
-	dd code
-	dd bss
-	dd end
-	dd start
 
-start:
-	mov esp, _sys_stack
+STACK_SIZE equ 0x4000
+
+loader:
+	mov esp, stack + STACK_SIZE
 	push eax
 	push ebx
 
 	call main
 
-	cli	
+	cli
 hang:
 	hlt
 	jmp hang
@@ -500,5 +495,6 @@ irq_common_stub:
 	iret
 
 SECTION .bss
-	resb 8192
-_sys_stack:
+ALIGN 32
+stack:
+	resb STACK_SIZE

@@ -1,23 +1,27 @@
-OUTPUT_FORMAT("binary")
-ENTRY (start)
+OUTPUT_FORMAT("elf32-i386")
+ENTRY (loader)
 SECTIONS {
-    . = 0x00100000;
+	. = 0x00100000;
+	start = .;
 
-    .text : {
-        code = .;
-        *(.text)
-        *(.rodata)
-    }
+	.text : {
+		*(.text)
+	}
 
-    .data ALIGN (0x1000) : {
-        data = .;
-        *(.data)
-    }
+	.rodata ALIGN (0x1000) : {
+		*(.rodata)
+	}
 
-    .bss : {
-        bss = .;
-        *(COMMON)
-        *(.bss)
-    }
-    end = .;
+	.data ALIGN (0x1000) : {
+		*(.data)
+	}
+
+	.bss : {
+		sbss = .;
+		*(COMMON)
+		*(.bss)
+		ebss = .;
+	}
+
+	end = .;
 }
