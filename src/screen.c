@@ -58,7 +58,7 @@ void set_line(const uint8_t line, const int8_t *str)
 {
 	clear_line(line);
 	uint8_t x = 0, y = line;
-	int32_t i;
+	uint32_t i;
 	for (i = 0; i < strlen(str); i++) {
 		switch (str[i]) {
 			case '\n':

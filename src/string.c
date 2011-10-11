@@ -18,13 +18,20 @@
 #include <string.h>
 #include <math.h>
 
+/*
+ * memcpy copies from ct[0] to ct[n-1] to dest
+ * memmove will ether do ct[n-1] to ct[0] or
+ *   use memcpy depending on orientation.
+ */
+
 void *memcpy(void *s, const void *ct, size_t n)
 {
-	char *dest = s;
-	const char *src = ct;
+	uint8_t *dest = s;
+	const uint8_t *src = ct;
 
-	for (; n >= 0; n--)
-		dest[n] = src[n];
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		dest[p] = src[p];
 
 	return dest;
 }
@@ -34,9 +41,12 @@ void *memmove(void *s, const void *ct, size_t n)
 	uint8_t *dest = s;
 	const uint8_t *src = ct;
 
-	int32_t i;
-	for (i = 0; i < n; i++)
-		dest[i] = src[i];
+	if ((uint32_t)src < (uint32_t)dest) {
+		uint32_t i = n;
+		for (; i + 1 > 0; i--)
+			dest[i] = src[i];
+	} else if ((uint32_t)src > (uint32_t)dest)
+		return memcpy(s, ct, n);
 
 	return s;
 }
@@ -46,8 +56,9 @@ int memcmp(const void *cs, const void *ct, size_t n)
 	const uint8_t *s = cs, *t = ct;
 
 	int tmp = 0;
-	for (; n >= 0; n--)
-		tmp += (s[n] > t[n] ? 1 : (s[n] < t[n] ? -1 : 0));
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		tmp += (s[p] > t[p] ? 1 : (s[p] < t[p] ? -1 : 0));
 	return tmp;
 }
 
@@ -55,9 +66,10 @@ void *memchr(const void *cs, int c, size_t n)
 {
 	const uint8_t *src = cs;
 
-	for (; n >= 0; n--)
-		if (src[n] == (uint8_t)c)
-			return (void *)&src[n]; /* void *, suppresses warning */
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		if (src[p] == (uint8_t)c)
+			return (void *)&src[p]; /* void *, suppresses warning */
 
 	return NULL;
 }
@@ -66,8 +78,9 @@ void *memset(void *s, int c, size_t n)
 {
 	uint8_t *dest = s;
 
-	for (; n >= 0; n--)
-		dest[n] = (uint8_t)c;
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		dest[p] = (uint8_t)c;
 
 	return s;
 }
@@ -76,8 +89,9 @@ void *memsetw(void *s, int c, size_t n)
 {
 	uint16_t *dest = s;
 
-	for (; n >= 0; n--)
-		dest[n] = (uint16_t)c;
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		dest[p] = (uint16_t)c;
 
 	return s;
 }
@@ -93,8 +107,9 @@ char *strncpy(void *s, const void *ct, size_t n)
 	const char *src = ct;
 	size_t len = strlen(src);
 
-	for (; n >= 0; n--)
-		dest[n] = (char)(n <= len ? src[n] : 0);
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		dest[p] = (char)(p <= len ? src[p] : 0);
 
 	return dest;
 }
@@ -106,8 +121,9 @@ char *strcat(void *s, const void *ct)
 	const char *src = ct;
 	size_t len = strlen(src);
 
-	for (; len >= 0; len--)
-		dest[len] = src[len];
+	uint32_t p;
+	for (p = 0; p < len; p++)
+		dest[p] = src[p];
 
 	return s;
 }
@@ -124,8 +140,9 @@ char *strncat(void *s, const void *ct, size_t n)
 	else
 		dest[n + 1] = 0;
 
-	for (; n >= 0; n--)
-		dest[n] = src[n];
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		dest[p] = src[p];
 
 	return s;
 }
@@ -133,22 +150,24 @@ char *strncat(void *s, const void *ct, size_t n)
 int strcmp(const void *cs, const void *ct)
 {
 	const char *s = cs, *t = ct;
-	int n = MIN(strlen(s), strlen(t));
+	uint32_t n = MIN(strlen(s), strlen(t));
 
-	int tmp = 0;
-	for (; n >= 0; n--)
-		tmp += (s[n] > t[n] ? 1 : (s[n] < t[n] ? -1 : 0));
+	int32_t tmp = 0;
+	uint32_t p;
+	for (p = 0; p < n; p++)
+		tmp += (s[p] > t[p] ? 1 : (s[p] < t[p] ? -1 : 0));
 	return tmp;
 }
 
 int strncmp(const void *cs, const void *ct, size_t n)
 {
 	const char *s = cs, *t = ct;
-	int i = MIN(MIN(strlen(s), strlen(t)), n);
+	size_t len = MIN(MIN(strlen(s), strlen(t)), n);
 
-	int tmp = 0;
-	for (; i >= 0; i--)
-		tmp += (s[i] > t[i] ? 1 : (s[i] < t[i] ? -1 : 0));
+	int32_t tmp = 0;
+	uint32_t p;
+	for (p = 0; p < len; p++)
+		tmp += (s[p] > t[p] ? 1 : (s[p] < t[p] ? -1 : 0));
 	return tmp;
 }
 

@@ -19,7 +19,6 @@
 #define __STRING_H_
 
 #include <stdint.h>
-typedef int32_t size_t;
 
 #ifndef NULL
 #	define NULL ((void *)0)

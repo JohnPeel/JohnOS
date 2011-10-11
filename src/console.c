@@ -83,7 +83,7 @@ void console_setup(void)
 	title[0] = '|';
 
 	size_t ver_l = strlen(version);
-	int32_t i = 34 - ((ver_l - 1) / 2);
+	uint32_t i = 34 - ((ver_l - 1) / 2);
 	memcpy(&title[i], "JohnOS", 5);
 	memcpy(&title[i + 7], version, ver_l - 1);
 
