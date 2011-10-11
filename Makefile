@@ -13,7 +13,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: all build clean dist todolist
+.PHONY: all clean dist todolist fixmelist
 
 NASM=nasm
 CC=i586-elf-gcc
@@ -34,30 +34,47 @@ WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
             -Wuninitialized -Wconversion -Wstrict-prototypes
 CFLAGS := -g -std=c99 -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
           -I./includes -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
+LFLAGS := 
 
-all: clean build
+ifndef DEBUG
+	CFLAGS := $(CFLAGS) -DNDEBUG
+	LFLAGS := $(LFLAGS) --strip-all
+endif
 
-build: kernel.bin
+all: kernel.bin
 	
-kernel.bin: build/start.o $(OBJFILES)
-	@$(LD) -T src/link.ld -o kernel.bin build/start.o $(OBJFILES)
-	
+
+kernel.bin: build/start.o src/link.ld $(OBJFILES)
+	@$(LD) $(LFLAGS) -T src/link.ld -o kernel.bin build/start.o $(OBJFILES)
+
 %/ph: 
 	@mkdir -p $(@D)
 	@touch $@
-	
-build/start.o: build/ph
+
+-include $(DEPFILES)
+
+build/start.o: src/start.asm build/ph
 	@$(NASM) -o build/start.o -f elf -Ox -Xgnu src/start.asm
-	
+
 build/%.o: src/%.c build/ph
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	-@$(RM) -r $(wildcard $(OBJFILES) build/start.o $(DEPFILES) build/ kernel.bin kernel.tar.gz kernel.img)
-	
+	-@$(RM) -r $(wildcard build/ kernel.bin kernel.tar.gz)
+
 dist:
 	@tar czf kernel.tar.gz $(ALLFILES)
-	
+
+fixmelist:
+	-@for file in $(SRCFILES); do fgrep -Hn -e FIXME $$file; done; true
+	-@for file in $(HDRFILES); do fgrep -Hn -e FIXME $$file; done; true
+
 todolist:
-	-@for file in $(SRCFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
-	-@for file in $(HDRFILES); do fgrep -H -e TODO -e FIXME $$file; done; true
+	-@for file in $(SRCFILES); do fgrep -Hn -e NOTE -e TODO $$file; done; true
+	-@for file in $(HDRFILES); do fgrep -Hn -e NOTE -e TODO $$file; done; true
+
+src/start.asm:
+	
+
+src/link.ld:
+	
