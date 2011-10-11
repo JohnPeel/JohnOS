@@ -16,7 +16,7 @@
 */
 
 #include <string.h>
-#include <memory.h> /* for NULL, maybe we need stddef.h? */
+#include <math.h>
 
 void *memcpy(void *s, const void *ct, size_t n)
 {
@@ -152,11 +152,11 @@ int strncmp(const void *cs, const void *ct, size_t n)
 	return tmp;
 }
 
-size_t strlen(const void *cs) {
+size_t strlen(const void *cs)
+{
 	const char *str = cs;
 
 	size_t tmp;
 	for (tmp = 0; str[tmp] != '\0'; tmp++);
 	return tmp;
 }
-

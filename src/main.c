@@ -28,6 +28,8 @@
 #include <string.h>
 #include <keyboard.h>
 
+#include <math.h>
+
 const char *version = "v0.1a";
 
 void main(const struct multiboot_info *mbi, uint32_t magic)
@@ -35,24 +37,33 @@ void main(const struct multiboot_info *mbi, uint32_t magic)
 	init_video();
 	console_setup();
 
-	if (magic != MULTIBOOT_VALID)
-	{
+	if (magic != MULTIBOOT_VALID) {
 		console_print("Problem with magicboot info! Halting System.");
 		for(;;);
 	}
 
-	memory_init();
-	/*
 	if ((mbi->flags & MB_INFO_MEM_MAP) == MB_INFO_MEM_MAP) {
-		struct AddrRangeDesc *mmap = (struct AddrRangeDesc *)mbi->mmap_addr;
-		while ((unsigned int)mmap < mbi->mmap_addr + mbi->mmap_length) {
-			if ((mmap->Type & MB_ARD_MEMORY) == MB_ARD_MEMORY) {
-				...
+		struct multiboot_memory_map *mmap = (struct multiboot_memory_map *)mbi->mmap_addr;
+		while((uint32_t)mmap < mbi->mmap_addr + mbi->mmap_length) {
+			if (mmap->type == MB_ARD_MEMORY) {
+				if (mmap->base_addr_high > 0)
+					break;
+
+				if (mmap->length_high > 0) {
+					memory_add(mmap->base_addr_low, 0xFFFFFFFF - mmap->base_addr_low);
+					break;
+				}
+
+				memory_add(mmap->base_addr_low, mmap->length_low);
 			}
-			mmap = (struct AddrRangeDesc *)((unsigned int)mmap + mmap->size + sizeof(unsigned int));
+			mmap = (struct multiboot_memory_map *)((uint32_t)mmap + mmap->size + sizeof(uint32_t));
 		}
+		memory_init();
+	} else {
+		//TODO: Add code to find free memory, without using mbi
+		console_print("Required magicboot info missing! Halting System.");
+		for (;;);
 	}
-	*/
 
 	gdt_install();
 	idt_install();
@@ -63,7 +74,7 @@ void main(const struct multiboot_info *mbi, uint32_t magic)
 
 	asm("sti");
 
-	//TODO: The Rest?
+	//NOTE: Maybe add shell code here?
 
 	for (;;);
 }

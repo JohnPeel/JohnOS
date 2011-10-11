@@ -18,16 +18,36 @@
 #ifndef __MEMORY_H_
 #define __MEMORY_H_
 
-#include <string.h>
+#include <stdint.h>
 
 #ifndef NULL
 #	define NULL ((void *)0)
 #endif
 
+#define MEM_FREE 0x00
+#define MEM_USED 0x01
+
+#define MEM_TAIL 0x10
+#define MEM_END 0x20
+
+struct memory_header;
+struct memory_header {
+	uint32_t checksum; //HEADER_GOOD
+	uint8_t status;
+	uint32_t size;
+	struct memory_header *prev;
+	struct memory_header *next;
+} __attribute__((packed));
+
+#define HEADER_SIZE (sizeof(struct memory_header))
+#define HEADER_GOOD ((uint32_t)0x44474259)
+
 extern void free(void *ptr);
-extern void *malloc(size_t size);
-extern void *calloc(size_t nobj, size_t size);
-extern void *realloc(void *p, size_t size);
+extern void *malloc(uint32_t size);
+extern void *calloc(uint32_t nobj, uint32_t size);
+extern void *realloc(void *p, uint32_t size);
+extern void memory_add(uint32_t base, uint32_t size);
+extern void memory_walk(void);
 extern void memory_init(void);
 
 #endif

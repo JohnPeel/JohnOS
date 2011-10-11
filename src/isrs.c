@@ -19,6 +19,10 @@
 #include <idt.h>
 #include <console.h>
 
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+
 const char *exceptions[] =
 {
 	"Division By Zero",
@@ -59,8 +63,35 @@ void fault_handler(regs *r)
 {
 	if (r->int_no < 32) {
 		console_print("");
-		console_print(exceptions[r->int_no]);
-		console_print(" Exception. System Halted!");
+		char s[78];
+		memset(s, 0, 78);
+		strcpy(s, exceptions[r->int_no]);
+		strcat(s, " Exception. System Halted!");
+		console_print(s);
+
+		console_print_ni("  int_no  : ", r->int_no, 10);
+		console_print_ni("  err_code: ", r->err_code, 10);
+
+		console_print_ni("  gs      : ", r->gs, 16);
+		console_print_ni("  fs      : ", r->fs, 16);
+		console_print_ni("  es      : ", r->es, 16);
+		console_print_ni("  ds      : ", r->ds, 16);
+
+		console_print_ni("  edi     : ", r->edi, 16);
+		console_print_ni("  esi     : ", r->esi, 16);
+		console_print_ni("  ebp     : ", r->ebp, 16);
+		console_print_ni("  esp     : ", r->esp, 16);
+		console_print_ni("  ebx     : ", r->ebx, 16);
+		console_print_ni("  edx     : ", r->edx, 16);
+		console_print_ni("  ecx     : ", r->ecx, 16);
+		console_print_ni("  eax     : ", r->eax, 16);
+
+		console_print_ni("  eip     : ", r->eip, 16);
+		console_print_ni("  cs      : ", r->cs, 16);
+		console_print_ni("  eflags  : ", r->eflags, 16);
+		console_print_ni("  useresp : ", r->useresp, 16);
+		console_print_ni("  ss      : ", r->ss, 16);
+
 		for (;;);
 	}
 }

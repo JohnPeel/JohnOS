@@ -16,11 +16,49 @@
 */
 
 #include <math.h>
+#include <string.h>
 
-long pow(long b, long e)
+/*
+ * char *ntoa(uint32_t n, uint32_t base)
+ *   Convert n to a string.
+ *  base: 2 - Bin, 8 - Oct, 10 - Dec, 16 - Hex
+ */
+char ntoa_table[16] = {'0', '1', '2', '3', '4', '5', '6', '7', 
+					'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+char *ntoa(char *dest, uint32_t src, uint8_t base)
 {
-	long i, j = 1;
-	for (i = 1; i <= e; i++)
-		j *= b;
-	return j;
+	char s[33] = {0, }; //32 = Length of 0xFFFFFFFF in Binary
+	memset(dest, 0, 33);
+
+	uint32_t p = 1;
+	for (p = 0; src > 0; p++) {
+		s[p] = ntoa_table[src % base];
+		src /= base;
+	}
+
+	if (p == 0)
+		s[0] = '0';
+
+	uint32_t len = p > 0 ? p : 1;
+
+	for (p = 0; p < len; p++)
+		dest[p] = s[len - (p + 1)];
+
+	switch (base) {
+		case 8:
+			memcpy(&dest[1], dest, (size_t)len);
+			dest[0] = '0';
+			break;
+		case 10:
+			break;
+		case 2:
+		case 16:
+			memcpy(&dest[2], dest, (size_t)len);
+			dest[0] = '0';
+			dest[1] = 'x';
+			break;
+	}
+
+	return dest;
 }

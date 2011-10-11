@@ -45,15 +45,14 @@ struct mod_list {
  *  map has been reached.
  */
 
-struct AddrRangeDesc {
+struct multiboot_memory_map {
 	uint32_t size;
-	uint64_t BaseAddr;
-	uint64_t Length;
-	uint32_t Type;
-	/* unspecified optional padding... */
-} __attribute__ ((packed));
+	uint32_t base_addr_low, base_addr_high;
+	uint32_t length_low, length_high;
+	uint32_t type;
+} __attribute__((packed));
 
-/* usable memory "Type", all others are reserved.  */
+/* usable memory "type", all others are reserved.  */
 #define MB_ARD_MEMORY		1
 
 /* Drive Info structure.  */

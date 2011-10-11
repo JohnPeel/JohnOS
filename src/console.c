@@ -20,6 +20,7 @@
 #include <system.h>
 #include <screen.h>
 #include <string.h>
+#include <math.h>
 
 int8_t title[LINE_LENGTH + 1] = {0, };
 int8_t buffer[CONSOLE_BUFFER_LENGTH] = {0, };
@@ -60,6 +61,17 @@ void console_print(const char *s) /* Using char instead of int8_t to avoid warni
 	memmove((void *)buffer, (void *)&buffer[CONSOLE_LINE_LENGTH], CONSOLE_BUFFER_LENGTH - CONSOLE_LINE_LENGTH);
 	console_set_line(20, (const int8_t *)s);
 	console_update();
+}
+
+void console_print_ni(const char *str, uint32_t n, uint8_t base)
+{
+	uint32_t len = (uint32_t)(strlen(str) + 33);
+	char result[len];
+	memset(result, 0, (size_t)len);
+	strcpy(result, str);
+	char num[33];
+	strcat(result, ntoa(num, n, base));
+	console_print(result);
 }
 
 void console_setup(void)

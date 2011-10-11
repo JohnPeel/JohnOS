@@ -18,6 +18,8 @@
 #ifndef __MATH_H_
 #define __MATH_H_
 
-extern long pow(long b, long e);
+#include <stdint.h>
+
+extern char *ntoa(char *dest, uint32_t src, uint8_t base);
 
 #endif

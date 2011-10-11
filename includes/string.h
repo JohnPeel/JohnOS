@@ -21,6 +21,10 @@
 #include <stdint.h>
 typedef int32_t size_t;
 
+#ifndef NULL
+#	define NULL ((void *)0)
+#endif
+
 #define MIN(x, y) (x >= y ? x : y)
 
 extern void *memcpy(void *s, const void *ct, size_t n);

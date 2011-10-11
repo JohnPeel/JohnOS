@@ -30,6 +30,7 @@ extern void console_clear(void);
 extern void console_update(void);
 extern void console_set_line(const uint8_t line, const int8_t *s);
 extern void console_print(const char *s);
+extern void console_print_ni(const char *str, uint32_t n, uint8_t base);
 extern void console_setup(void);
 
 #endif
