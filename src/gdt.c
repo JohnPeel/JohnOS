@@ -19,30 +19,31 @@
 #include <string.h>
 #include <console.h>
 
-struct gdt_entry gdt[3];
+gdt_entry gdt[5];
 struct gdt_ptr gp;
 
-void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
+void gdt_set_gate(uint32_t index, uint32_t base, uint32_t limit, uint16_t flag)
 {
-	gdt[num].base_low = (base & 0xFFFF);
-	gdt[num].base_middle = (base >> 16) & 0xFF;
-	gdt[num].base_high = (unsigned char)((base >> 24) & 0xFF);
-
-	gdt[num].limit_low = (limit & 0xFFFF);
-	gdt[num].granularity = (unsigned char)(((limit >> 16) & 0x0F) | (gran & 0xF0));
-	gdt[num].access = access;
+	gdt[index] = (limit & 0x000F0000);
+	gdt[index] |= ((flag << 8) & 0x00F0FF00);
+	gdt[index] |= ((base >> 16) & 0xFF0000FF);
+	gdt[index] <<= 32;
+	gdt[index] |= (base << 16);
+	gdt[index] |= (limit & 0x0000FFFF);
 }
 
 void gdt_install(void)
 {
-	memset(&gdt, 0, sizeof(struct gdt_entry) * 3);
+	memset(gdt, 0, sizeof(gdt));
 
-	gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
-	gp.base = (unsigned int)&gdt;
+	gp.limit = (uint16_t)(sizeof(gdt) - 1);
+	gp.base = (uint32_t)gdt;
 
-	gdt_set_gate(0, 0, 0, 0, 0);
-	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+	gdt_set_gate(0, 0, 0, 0);
+	gdt_set_gate(1, 0, 0x000FFFFF, GDT_CODE_PL0);
+	gdt_set_gate(2, 0, 0x000FFFFF, GDT_DATA_PL0);
+	gdt_set_gate(3, 0, 0x000FFFFF, GDT_CODE_PL3);
+	gdt_set_gate(4, 0, 0x000FFFFF, GDT_DATA_PL3);
 
 	gdt_flush();
 
