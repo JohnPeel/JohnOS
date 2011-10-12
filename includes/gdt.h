@@ -61,6 +61,10 @@
 						SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | \
 						SEG_PRIV(3) | SEG_DATA_RDWR)
 
+#define GDT_TSS			(SEG_TYPE(0) | SEG_PRES(1) | SEG_SAVL(0) | \
+						SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | \
+						SEG_PRIV(0) | SEG_CODE_EXA)
+
 typedef uint64_t gdt_entry;
 struct gdt_ptr {
 	uint16_t limit;

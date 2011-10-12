@@ -44,6 +44,7 @@ void gdt_install(void)
 	gdt_set_gate(2, 0, 0xFFFFFFFF, GDT_DATA_PL0);
 	gdt_set_gate(3, 0, 0xFFFFFFFF, GDT_CODE_PL3);
 	gdt_set_gate(4, 0, 0xFFFFFFFF, GDT_DATA_PL3);
+	//gdt_set_gate(5, &tss, sizeof(tss), GDT_TSS);
 
 	gdt_flush();
 
