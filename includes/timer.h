@@ -19,8 +19,9 @@
 #define __TIMER_H_
 
 #include <idt.h>
+#include <stdint.h>
 
-extern void timer_wait(unsigned long ticks);
+extern void timer_wait(uint32_t ticks);
 extern void timer_handler(regs *r);
 extern void timer_install(void);
 

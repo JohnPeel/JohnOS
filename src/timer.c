@@ -20,13 +20,12 @@
 #include <system.h>
 #include <console.h>
 
-unsigned long timer_ticks = 0;
+volatile uint32_t timer_ticks = 0;
 
-void timer_wait(unsigned long ticks)
+void timer_wait(uint32_t ticks)
 {
-	unsigned long wait_for = timer_ticks + ticks;
-	while (wait_for > timer_ticks) io_wait();
-	//FIXME: timer_wait(#); goes into inf loop without io_wait();
+	uint32_t wait_for = timer_ticks + ticks;
+	while (wait_for > timer_ticks);
 }
 
 void timer_handler(regs *r)
