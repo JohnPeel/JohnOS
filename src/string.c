@@ -42,11 +42,12 @@ void *memmove(void *s, const void *ct, size_t n)
 	const uint8_t *src = ct;
 
 	if ((uint32_t)src < (uint32_t)dest) {
-		uint32_t i = n;
-		for (; i + 1 > 0; i--)
-			dest[i] = src[i];
+		uint32_t p;
+		for (p = 1; p <= n; p++)
+			dest[n - p] = src[n - p];
 	} else if ((uint32_t)src > (uint32_t)dest)
 		return memcpy(s, ct, n);
+	/* else dest == src, just return dest */
 
 	return s;
 }
@@ -116,16 +117,7 @@ char *strncpy(void *s, const void *ct, size_t n)
 
 char *strcat(void *s, const void *ct)
 {
-	char *dest = s;
-	dest = &dest[strlen(dest)];
-	const char *src = ct;
-	size_t len = strlen(src);
-
-	uint32_t p;
-	for (p = 0; p < len; p++)
-		dest[p] = src[p];
-
-	return s;
+	return strncat(s, ct, strlen((char *)ct));
 }
 
 char *strncat(void *s, const void *ct, size_t n)
@@ -133,15 +125,12 @@ char *strncat(void *s, const void *ct, size_t n)
 	char *dest = s;
 	dest = &dest[strlen(dest)];
 	const char *src = ct;
-	size_t len = strlen(src);
+	size_t len = MIN(strlen(src), n);
 
-	if (n > len)
-		n = len;
-	else
-		dest[n + 1] = 0;
+	dest[len] = 0;
 
 	uint32_t p;
-	for (p = 0; p < n; p++)
+	for (p = 0; p < len; p++)
 		dest[p] = src[p];
 
 	return s;

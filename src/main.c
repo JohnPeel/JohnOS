@@ -27,7 +27,6 @@
 #include <timer.h>
 #include <string.h>
 #include <keyboard.h>
-
 #include <math.h>
 
 const char *version = "v0.1a";

@@ -24,8 +24,8 @@
 #	define NULL ((void *)0)
 #endif
 
-#define MEM_FREE 0x00
-#define MEM_USED 0x01
+#define MEM_FREE 0x01
+#define MEM_USED 0x02
 
 #define MEM_TAIL 0x10
 #define MEM_END 0x20
@@ -40,7 +40,7 @@ struct memory_header {
 } __attribute__((packed));
 
 #define HEADER_SIZE (sizeof(struct memory_header))
-#define HEADER_GOOD ((uint32_t)0x44474259)
+#define HEADER_GOOD (0x44474259UL)
 
 extern void free(void *ptr);
 extern void *malloc(uint32_t size);

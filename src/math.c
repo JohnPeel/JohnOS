@@ -16,6 +16,7 @@
 */
 
 #include <math.h>
+#include <memory.h>
 #include <string.h>
 
 /*
@@ -28,8 +29,10 @@ char ntoa_table[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 
 char *ntoa(char *dest, uint32_t src, uint8_t base)
 {
-	char s[33] = {0, }; //32 = Length of 0xFFFFFFFF in Binary
-	memset(dest, 0, 33);
+	char s[NOTA_MAX] = {0, };
+	if (dest == NULL)
+		dest = malloc(NOTA_MAX);
+	memset(dest, 0, NOTA_MAX);
 
 	uint32_t p = 1;
 	for (p = 0; src > 0; p++) {
@@ -39,7 +42,6 @@ char *ntoa(char *dest, uint32_t src, uint8_t base)
 
 	if (p == 0)
 		s[0] = '0';
-
 	uint32_t len = p > 0 ? p : 1;
 
 	for (p = 0; p < len; p++)
@@ -47,14 +49,14 @@ char *ntoa(char *dest, uint32_t src, uint8_t base)
 
 	switch (base) {
 		case 8:
-			memcpy(&dest[1], dest, (size_t)len);
+			memmove(&dest[1], dest, (size_t)len);
 			dest[0] = '0';
 			break;
 		case 10:
 			break;
 		case 2:
 		case 16:
-			memcpy(&dest[2], dest, (size_t)len);
+			memmove(&dest[2], dest, (size_t)len);
 			dest[0] = '0';
 			dest[1] = 'x';
 			break;

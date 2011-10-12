@@ -20,6 +20,8 @@
 
 #include <stdint.h>
 
+#define NOTA_MAX 33
+
 extern char *ntoa(char *dest, uint32_t src, uint8_t base);
 
 #endif

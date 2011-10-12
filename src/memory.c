@@ -78,12 +78,12 @@ inline int is_header(struct memory_header *header)
 
 inline int is_free(struct memory_header *header)
 {
-	return ((header->status & 0x0F) == MEM_FREE);
+	return ((header->status & MEM_FREE) == MEM_FREE);
 }
 
 inline int is_used(struct memory_header *header)
 {
-	return ((header->status & 0x0F) == MEM_USED);
+	return ((header->status & MEM_USED) == MEM_USED);
 }
 
 struct memory_header *top = NULL;
@@ -97,6 +97,7 @@ void free(void *ptr)
 	}
 
 	header->status &= 0xF0;
+	header->status |= MEM_FREE;
 
 	if ((!is_tail(header)) && (!is_end(header))) {
 		struct memory_header *next = header->next;
@@ -231,8 +232,8 @@ void memory_walk(void)
 	console_print("Address: Status, Size, Previous, Next");
 	struct memory_header *header = top;
 	while (header != NULL) {
-		char str[78] = {0, };
-		char num[33] = {0, };
+		char str[CONSOLE_LINE_LENGTH] = {0, };
+		char num[NOTA_MAX] = {0, };
 		strcpy(str, ntoa(num, (uint32_t)header, 16));
 		strcat(str, ": ");
 		strcat(str, ntoa(num, header->status, 16));

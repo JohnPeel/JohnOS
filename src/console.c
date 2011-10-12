@@ -53,7 +53,7 @@ void console_update(void) {
 void console_set_line(const uint8_t line, const int8_t *s)
 {
 	console_clear_line(line);
-	memcpy((void *)&buffer[line * CONSOLE_LINE_LENGTH], (void *)s, strlen(s) - 1);
+	memcpy((void *)&buffer[line * CONSOLE_LINE_LENGTH], (void *)s, strlen(s));
 }
 
 void console_print(const char *s) /* Using char instead of int8_t to avoid warnings... */
@@ -83,9 +83,9 @@ void console_setup(void)
 	title[0] = '|';
 
 	size_t ver_l = strlen(version);
-	uint32_t i = 34 - ((ver_l - 1) / 2);
-	memcpy(&title[i], "JohnOS", 5);
-	memcpy(&title[i + 7], version, ver_l - 1);
+	uint32_t i = 34 - (ver_l / 2);
+	memcpy(&title[i], "JohnOS", 6);
+	memcpy(&title[i + 7], version, ver_l);
 
 	title[79] = '|';
 
