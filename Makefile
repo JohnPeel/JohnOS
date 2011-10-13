@@ -33,7 +33,7 @@ WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wuninitialized -Wconversion -Wstrict-prototypes
 CFLAGS := -g -std=c99 -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
-          -I./includes -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
+          -I./includes -ffreestanding -nostartfiles -nodefaultlibs -fno-leading-underscores -MMD -MP -c $(WARNINGS)
 LFLAGS := 
 
 ifndef DEBUG
