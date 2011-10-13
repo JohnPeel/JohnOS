@@ -10,12 +10,12 @@ SECTIONS {
 
 	.text ALIGN(4096) : {
 		kernel_code = .;
-		*(.text)
+		*(.text*)
 	}
 
 	.rodata ALIGN(4096) : {
 		kernel_rodata = .;
-		*(.rodata)
+		*(.rodata*)
 	}
 
 	.data ALIGN(4096) : {
@@ -31,10 +31,11 @@ SECTIONS {
 		kernel_ebss = .;
 	}
 
-	kernel_end = .;
-
 	/DISCARD/ :
 	{
 		*(.comment)
+		*(.eh_frame)
 	}
+
+	kernel_end = .;
 }
