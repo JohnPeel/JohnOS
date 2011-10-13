@@ -25,7 +25,7 @@ SRCFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
 OBJFILES := $(patsubst src/%.c,build/%.o,$(SRCFILES))
 DEPFILES := $(patsubst src/%.c,build/%.d,$(SRCFILES))
-SRCFILES := src/start.asm $(SRCFILES)
+SRCFILES := src/start.asm src/link.ld $(SRCFILES)
 ALLFILES := $(SRCFILES) $(HDRFILES) $(AUXFILES)
 
 WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
@@ -45,9 +45,9 @@ all: kernel.bin
 	
 
 kernel.bin: build/start.o src/link.ld $(OBJFILES)
-	@$(LD) $(LFLAGS) -T src/link.ld -o kernel.bin build/start.o $(OBJFILES)
+	@$(LD) $(LFLAGS) -T src/link.ld $(OBJFILES)
 
-%/ph: 
+%/ph:
 	@mkdir -p $(@D)
 	@touch $@
 
@@ -60,10 +60,10 @@ build/%.o: src/%.c build/ph
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	-@$(RM) -r $(wildcard build/ kernel.bin kernel.tar.gz)
+	-@$(RM) -r $(wildcard build/ kernel.bin JohnOS.tar.gz)
 
 dist:
-	@tar czf kernel.tar.gz $(ALLFILES)
+	@tar czf JohnOS.tar.gz $(ALLFILES)
 
 fixmelist:
 	-@for file in $(SRCFILES); do fgrep -Hn -e FIXME $$file; done; true

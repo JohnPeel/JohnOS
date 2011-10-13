@@ -1,27 +1,40 @@
 OUTPUT_FORMAT("elf32-i386")
-ENTRY (loader)
+ENTRY(loader)
+STARTUP(build\start.o)
+OUTPUT(kernel.bin)
+
 SECTIONS {
 	. = 0x00100000;
-	start = .;
 
-	.text : {
+	kernel_start = .;
+
+	.text ALIGN(4096) : {
+		kernel_code = .;
 		*(.text)
 	}
 
-	.rodata ALIGN (0x1000) : {
+	.rodata ALIGN(4096) : {
+		kernel_rodata = .;
 		*(.rodata)
 	}
 
-	.data ALIGN (0x1000) : {
+	.data ALIGN(4096) : {
+		kernel_data = .;
 		*(.data)
 	}
 
-	.bss : {
-		sbss = .;
+	.bss ALIGN(4096) : {
+		kernel_bss = .;
 		*(COMMON)
 		*(.bss)
-		ebss = .;
+		. = ALIGN(4096);
+		kernel_ebss = .;
 	}
 
-	end = .;
+	kernel_end = .;
+
+	/DISCARD/ :
+	{
+		*(.comment)
+	}
 }
