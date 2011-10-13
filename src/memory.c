@@ -192,8 +192,11 @@ void *realloc(void *p, uint32_t size)
 
 void memory_add(uint32_t base, uint32_t size)
 {
+	if (size <= HEADER_SIZE)
+		return;
+
 	if (base == 0) {
-		base++; //FIXME: Hacky fix... mmap reports 0->0x9f800 is free, 0 == NULL
+		base++; //FIXME: Hacky fix... mmap reports 0x0-0x9f800 is free, (0x0 = NULL)
 		size--;
 	}
 

@@ -53,9 +53,15 @@ void main(const struct kernel_info *ki, const struct multiboot_info *mbi, uint32
 					break;
 				}
 
-				if ((mmap->base_addr_low >= ki->start) && (mmap->base_addr_low < ki->end)) {
-					mmap->length_low -= ki->end - mmap->base_addr_low;
-					mmap->base_addr_low = ki->end;
+				if ((ki->start > mmap->base_addr_low) && (ki->end < (mmap->base_addr_low + mmap->length_low))) {
+					memory_add(mmap->base_addr_low, ki->start - mmap->base_addr_low);
+					memory_add(ki->end, mmap->length_low - (ki->end - mmap->base_addr_low));
+					mmap = (struct multiboot_memory_map *)((uint32_t)mmap + mmap->size + sizeof(uint32_t));
+					continue;
+				} else if (ki->start == mmap->base_addr_low) {
+					mmap->base_addr_low += ki->end - ki->start;
+				} else if (ki->end == (mmap->base_addr_low + mmap->length_low)) {
+					mmap->length_low -= ki->end - ki->start;
 				}
 
 				memory_add(mmap->base_addr_low, mmap->length_low);
