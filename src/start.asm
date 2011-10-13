@@ -23,6 +23,7 @@ MULTIBOOT_HEADER_MAGIC equ 0x1BADB002
 MULTIBOOT_HEADER_FLAGS equ MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
 MULTIBOOT_CHECKSUM equ -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
 
+
 SECTION .text
 ALIGN 4
 mboot:
@@ -30,12 +31,24 @@ mboot:
 	dd MULTIBOOT_HEADER_FLAGS
 	dd MULTIBOOT_CHECKSUM
 
+extern kernel_start, kernel_code, kernel_rodata, 
+extern kernel_data, kernel_bss, kernel_ebss, kernel_end
+kinfo:
+	dd kernel_start
+	dd kernel_code
+	dd kernel_rodata
+	dd kernel_data
+	dd kernel_bss
+	dd kernel_ebss
+	dd kernel_end
+
 STACK_SIZE equ 0x4000
 
 loader:
 	mov esp, stack + STACK_SIZE
 	push eax
 	push ebx
+	push kinfo
 
 	call main
 

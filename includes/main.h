@@ -21,7 +21,17 @@
 #include <stdint.h>
 #include <mb_info.h>
 
+struct kernel_info {
+	const uint32_t start;
+	const uint32_t code;
+	const uint32_t rodata;
+	const uint32_t data;
+	const uint32_t bss;
+	const uint32_t ebss;
+	const uint32_t end;
+};
+
 extern const char *version;
-extern void main(const struct multiboot_info *mbd, uint32_t magic);
+extern void main(const struct kernel_info *ki, const struct multiboot_info *mbi, uint32_t magic);
 
 #endif

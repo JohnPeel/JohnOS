@@ -31,7 +31,7 @@
 
 const char *version = "v0.1a";
 
-void main(const struct multiboot_info *mbi, uint32_t magic)
+void main(const struct kernel_info *ki, const struct multiboot_info *mbi, uint32_t magic)
 {
 	init_video();
 	console_setup();
@@ -53,6 +53,11 @@ void main(const struct multiboot_info *mbi, uint32_t magic)
 					break;
 				}
 
+				if ((mmap->base_addr_low >= ki->start) && (mmap->base_addr_low < ki->end)) {
+					mmap->length_low -= ki->end - mmap->base_addr_low;
+					mmap->base_addr_low = ki->end;
+				}
+
 				memory_add(mmap->base_addr_low, mmap->length_low);
 			}
 			mmap = (struct multiboot_memory_map *)((uint32_t)mmap + mmap->size + sizeof(uint32_t));
@@ -72,6 +77,8 @@ void main(const struct multiboot_info *mbi, uint32_t magic)
 	keyboard_install();
 
 	asm("sti");
+
+	memory_walk();
 
 	//NOTE: Maybe add shell code here?
 

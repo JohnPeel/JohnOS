@@ -86,7 +86,7 @@ inline int is_used(struct memory_header *header)
 	return ((header->status & MEM_USED) == MEM_USED);
 }
 
-struct memory_header *top = NULL;
+struct memory_header *top;
 
 void free(void *ptr)
 {
@@ -199,10 +199,10 @@ void memory_add(uint32_t base, uint32_t size)
 
 	struct memory_header *new_header = create_header((void *)base, size);
 	new_header->status |= MEM_TAIL;
-	if (top == NULL) {
+	if (!top) {
 		top = new_header;
 		top->status |= MEM_END;
-		return;
+		goto end;
 	}
 
 	struct memory_header *header = top;
@@ -217,13 +217,24 @@ void memory_add(uint32_t base, uint32_t size)
 		new_header->prev = header;
 		new_header->status |= MEM_END;
 		header->status &= 0x1F;
-		return;
+		goto end;
 	}
 
 	new_header->prev = header->prev;
 	header->prev = new_header;
 	new_header->next = header;
 	new_header->prev->next = new_header;
+
+	end: {
+		char str[CONSOLE_LINE_LENGTH] = {0, };
+		char num[NOTA_MAX];
+		strcpy(str, "Added memory (");
+		strcat(str, ntoa(num, base, 16));
+		strcat(str, ", ");
+		strcat(str, ntoa(num, size, 16));
+		strcat(str, ").");
+		console_print(str);
+	}
 }
 
 void memory_walk(void)

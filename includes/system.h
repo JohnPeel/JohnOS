@@ -18,14 +18,16 @@
 #ifndef __SYSTEM_H_
 #define __SYSTEM_H_
 
+#include <stdint.h>
+
 #define asm __asm__ __volatile__
 
-extern void outb(unsigned short port, unsigned char val);
-extern void outw(unsigned short port, unsigned int val);
-extern void outl(unsigned short port, unsigned long val);
-extern unsigned char inb(unsigned short port);
-extern unsigned int inw(unsigned short port);
-extern unsigned long inl(unsigned short port);
+extern void outb(uint16_t port, uint8_t val);
+extern void outw(uint16_t port, uint16_t val);
+extern void outl(uint16_t port, uint32_t val);
+extern uint8_t inb(uint16_t port);
+extern uint16_t inw(uint16_t port);
+extern uint32_t inl(uint16_t port);
 extern void io_wait(void);
 
 #endif
