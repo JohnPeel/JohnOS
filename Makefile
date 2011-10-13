@@ -25,7 +25,7 @@ SRCFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
 OBJFILES := $(patsubst src/%.c,build/%.o,$(SRCFILES))
 DEPFILES := $(patsubst src/%.c,build/%.d,$(SRCFILES))
-SRCFILES := src/start.asm src/link.ld $(SRCFILES)
+SRCFILES := src/start.s src/link.ld $(SRCFILES)
 ALLFILES := $(SRCFILES) $(HDRFILES) $(AUXFILES)
 
 WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
@@ -53,8 +53,8 @@ kernel.bin: build/start.o src/link.ld $(OBJFILES)
 
 -include $(DEPFILES)
 
-build/start.o: src/start.asm build/ph
-	@$(NASM) -o build/start.o -f elf -Ox -Xgnu src/start.asm
+build/start.o: src/start.s build/ph
+	@$(NASM) -o build/start.o -f elf -Ox -Xgnu src/start.s
 
 build/%.o: src/%.c build/ph
 	@$(CC) $(CFLAGS) $< -o $@
