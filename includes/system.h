@@ -22,12 +22,52 @@
 
 #define asm __asm__ __volatile__
 
-extern void outb(uint16_t port, uint8_t val);
-extern void outw(uint16_t port, uint16_t val);
-extern void outl(uint16_t port, uint32_t val);
-extern uint8_t inb(uint16_t port);
-extern uint16_t inw(uint16_t port);
-extern uint32_t inl(uint16_t port);
-extern void io_wait(void);
+static inline void outb(uint16_t port, uint8_t val)
+{
+	asm("outb %0, %1" : : "a"(val), "Nd"(port));
+}
+
+static inline void outw(uint16_t port, uint16_t val)
+{
+	asm("outw %0, %1" : : "a"(val), "Nd"(port));
+}
+
+static inline void outl(uint16_t port, uint32_t val)
+{
+	asm("outl %0, %1" : : "a"(val), "Nd"(port));
+}
+
+static inline uint8_t inb(uint16_t port)
+{
+	uint8_t ret;
+	asm("inb %1, %0" : "=a"(ret) : "Nd"(port));
+	return ret;
+}
+
+static inline uint16_t inw(uint16_t port)
+{
+	uint16_t ret;
+	asm("inw %1, %0" : "=a"(ret) : "Nd"(port));
+	return ret;
+}
+
+static inline uint32_t inl(uint16_t port)
+{
+	uint32_t ret;
+	asm("inl %1, %0" : "=a"(ret) : "Nd"(port));
+	return ret;
+}
+
+static inline inline void io_wait(void)
+{
+	asm("outb %%al, $0x80" : : "a"(0));
+}
+
+static inline inline uint32_t irqEnabled(void)
+{
+	uint32_t f;
+	asm("pushf; popl %0" : "=g"(f));
+	return f & ( 1 << 9 );
+}
 
 #endif

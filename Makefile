@@ -13,7 +13,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with JohnOS.  If not, see <http://www.gnu.org/licenses/>.
 
-.PHONY: all clean dist todolist fixmelist
+.PHONY: all clean dist todolist fixmelist createbuild
 
 NASM=nasm
 CC=i586-elf-gcc
@@ -23,6 +23,8 @@ AUXFILES := Makefile README COPYING
 PROJDIRS := src includes
 SRCFILES := $(shell find $(PROJDIRS) -type f -name "*.c")
 HDRFILES := $(shell find $(PROJDIRS) -type f -name "*.h")
+SRCDIRS := $(shell find $(PROJDIRS) -type d)
+DESTDIRS := $(patsubst src/%,build/%,$(SRCDIRS))
 OBJFILES := $(patsubst src/%.c,build/%.o,$(SRCFILES))
 DEPFILES := $(patsubst src/%.c,build/%.d,$(SRCFILES))
 SRCFILES := src/start.s src/link.ld $(SRCFILES)
@@ -33,7 +35,7 @@ WARNINGS := -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-align \
             -Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
             -Wuninitialized -Wconversion -Wstrict-prototypes
 CFLAGS := -g -std=c99 -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin \
-          -I./includes -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
+          -I./includes -I./includes/fs -ffreestanding -nostartfiles -nodefaultlibs -MMD -MP -c $(WARNINGS)
 LFLAGS := 
 
 ifndef DEBUG
@@ -44,23 +46,22 @@ endif
 all: kernel.bin
 	
 
-kernel.bin: build/start.o src/link.ld $(OBJFILES)
+kernel.bin: createbuild build/start.o src/link.ld $(OBJFILES)
 	@$(LD) $(LFLAGS) -T src/link.ld $(OBJFILES)
-
-%/ph:
-	@mkdir -p $(@D)
-	@touch $@
 
 -include $(DEPFILES)
 
-build/start.o: src/start.s build/ph
+build/start.o: src/start.s
 	@$(NASM) -o build/start.o -f elf -Ox -Xgnu src/start.s
 
-build/%.o: src/%.c build/ph
+build/%.o: src/%.c
 	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	-@$(RM) -r $(wildcard build/ kernel.bin JohnOS.tar.gz)
+
+createbuild:
+	-@for dir in $(DESTDIRS); do mkdir -p $$dir; done; true
 
 dist:
 	@tar czf JohnOS.tar.gz $(ALLFILES)

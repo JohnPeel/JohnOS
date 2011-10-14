@@ -84,9 +84,9 @@ void main(const struct kernel_info *ki, const struct multiboot_info *mbi, uint32
 
 	asm("sti");
 
-	memory_walk();
-
-	//NOTE: Maybe add shell code here?
+	//TODO: Launch shell program? (Ring 0 or 3?)
+	//0 for debugging would me nice
+	//3 for a working userspace, multiple shells? like 1->7 on linux 
 
 	for (;;);
 }
