@@ -9,3 +9,7 @@ Requirements:
     
   For Running (with run script):
     qemu, syslinux, mtools, dosfstools
+
+  On Gentoo:
+    emerge -va crossdev qemu, syslinux, mtools, dosfstools nasm
+    crossdev -S -v i686-elf
