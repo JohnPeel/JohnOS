@@ -1,3 +1,11 @@
 Simple OS, Temp Name
 
   -Dgby714
+
+
+Requirements:
+  For Compiling:
+    i686-elf cross compiler, nasm
+    
+  For Running (with run script):
+    qemu, syslinux, mtools, dosfstools
