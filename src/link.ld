@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("elf32-i386")
 ENTRY(loader)
-STARTUP(build\start.o)
+STARTUP(build/start.o)
 OUTPUT(kernel.bin)
 
 SECTIONS {

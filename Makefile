@@ -16,8 +16,8 @@
 .PHONY: all clean dist todolist fixmelist createbuild
 
 NASM=nasm
-CC=i586-elf-gcc
-LD=i586-elf-ld
+CC=i686-elf-gcc
+LD=i686-elf-ld
 
 AUXFILES := Makefile README COPYING
 PROJDIRS := src includes
